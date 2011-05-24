@@ -26,46 +26,64 @@ modified.
 
 Example:
 
-    dquery().add(4).days().set({ hours: 20 });
+```javascript
+dquery().add(4).days().set({ hours: 20 });
+```
 
 ### Stuff you can do
 
 Deal with a normal Date object:
 
-    var date = new Date();
-    /* ... */
-    var yay = dquery(date);
+```javascript
+var date = new Date();
+/* ... */
+var yay = dquery(date);
+```
 
 Add 4 years:
 
-    dquery("5/21/2011").add(4).years().toString()
-    // Thu May 21 2015 00:00:00 GMT+0200 (CEST)
+```javascript
+dquery("5/21/2011").add(4).years().toString()
+// Thu May 21 2015 00:00:00 GMT+0200 (CEST)
+```
 
 Reset time to 00:00:00:
 
-    dquery().resetTime().toString()
-    // Sat May 21 2011 00:00:00 GMT+0200 (CEST)
+```javascript
+dquery().resetTime().toString()
+// Sat May 21 2011 00:00:00 GMT+0200 (CEST)
+```
 
 Iterate all days of this month:
 
-    dquery.iterate( 
-        "days", 
-        dquery().firstDayOfMonth(),
-        dquery().lastDayOfMonth(),
-    function( date ) {
-        /* date parameter above is a dquery object */
-    });
+```javascript
+dquery.iterate( 
+    "days", 
+    dquery().firstDayOfMonth(),
+    dquery().lastDayOfMonth(),
+function( date ) {
+    /* date parameter above is a dquery object */
+});
+```
 
 Format date and time:
 
+```javascript
     dquery("5/12/2011").format("yyyy-mm-dd");
     // 2011-05-12
+```
 
+```javascript
     dquery("5/12/2011 14:50").format("m/d/yy hh:MM");
     // 5/12/11 14:50
+```
 
+```javascript
     dquery("5/12/2011 00:00").format("ha");
     // 12am
+```
 
+```javascript
     dquery("5/12/2011 12:00").format("ha");
     // 12pm
+```
