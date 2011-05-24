@@ -15,7 +15,7 @@ onto it. The end result is a `Date` object that you can use just like an ordinar
 
 #### Unobtrusive
 
-dquery doesn't pollute anything, except that it adds an object to window (`dquery` of course).
+**dquery** doesn't pollute anything, except that it adds an object to window (`dquery` of course).
 **A warning, though**: if you use libraries that break Date's normal behaviour, 
 dquery will probably not work properly.
 
