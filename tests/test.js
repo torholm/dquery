@@ -226,3 +226,10 @@ test("should determine yesterday, tomorrow, same date", function() {
     strictEqual( true, dquery("1/1/11").add(4).days().isTomorrow( dquery("1/1/11").add(3).days() ) );
     strictEqual( true, dquery("1/1/11").sameDate( dquery("1/1/11") ) );
 });
+
+
+module("values");
+test("should determine correct week", function() {
+    equals(48, dquery("11/24/2009").getWeek());
+    equals(21, dquery("5/24/2011").getWeek());
+});

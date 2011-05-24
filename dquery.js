@@ -128,6 +128,21 @@ var dquery = function( fmt ) {
         return this.sameDate( dquery( cmp || new Date ).add(1).days() );
     }
 
+    /**
+     * Uses ISO 8601.
+     * http://en.wikipedia.org/wiki/ISO_8601#Week_dates
+     * First week of every year is the week that contains 4 Jan.
+     */
+    date.getWeek = function() {
+        var oneDay = 24 * 60 * 60 * 1000;
+        var date = dquery( this ).resetTime().firstDayOfYear().set("date", 4);
+        var cmp = dquery( this ).resetTime();
+        while( date.getDay() != 1 )
+            date.setTime( date.getTime() - oneDay );
+        var weekMs = 7 * 24 * 60 * 60 * 1000; 
+        return Math.ceil((+cmp - +date) / weekMs) || 1;
+    }
+
     return date;
 }
 
