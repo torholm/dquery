@@ -69,21 +69,21 @@ function( date ) {
 Format date and time:
 
 ```javascript
-    dquery("5/12/2011").format("yyyy-mm-dd");
-    // 2011-05-12
+dquery("5/12/2011").format("yyyy-mm-dd");
+// 2011-05-12
 ```
 
 ```javascript
-    dquery("5/12/2011 14:50").format("m/d/yy hh:MM");
-    // 5/12/11 14:50
+dquery("5/12/2011 14:50").format("m/d/yy hh:MM");
+// 5/12/11 14:50
 ```
 
 ```javascript
-    dquery("5/12/2011 00:00").format("ha");
-    // 12am
+dquery("5/12/2011 00:00").format("ha");
+// 12am
 ```
 
 ```javascript
-    dquery("5/12/2011 12:00").format("ha");
-    // 12pm
+dquery("5/12/2011 12:00").format("ha");
+// 12pm
 ```
