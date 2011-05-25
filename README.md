@@ -42,11 +42,13 @@ var yay = dquery(date);
 
 Is the date in the dquery object in the future?
 
+```javascript
 var something = dquery();
 /* ... */
 if (something > new Date) {
     dqueryIsTheFuture();
 }
+```
 
 Add 4 years:
 
