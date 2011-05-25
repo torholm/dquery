@@ -232,4 +232,27 @@ module("values");
 test("should determine correct week", function() {
     equals(48, dquery("11/24/2009").getWeek());
     equals(21, dquery("5/24/2011").getWeek());
+    equals(53, dquery("1/3/2010").getWeek());
+    equals(1, dquery("12/30/2008").getWeek());
+    equals(2, dquery("1/6/2020").getWeek());
+    equals(1, dquery("1/5/2020").getWeek());
+});
+
+
+module("prev");
+test("should go to previous weekdays", function() {
+    equals("5-29", dquery("5/30/11").prev().sunday().format("m-d"));
+    equals("5-22", dquery("5/29/11").prev().sunday().format("m-d"));
+    equals("5-28", dquery("5/30/11").prev().saturday().format("m-d"));
+    equals("5-21", dquery("5/28/11").prev().saturday().format("m-d"));
+    equals("5-27", dquery("5/28/11").prev().friday().format("m-d"));
+    equals("5-20", dquery("5/27/11").prev().friday().format("m-d"));
+    equals("5-26", dquery("5/28/11").prev().thursday().format("m-d"));
+    equals("5-19", dquery("5/26/11").prev().thursday().format("m-d"));
+    equals("5-25", dquery("5/28/11").prev().wednesday().format("m-d"));
+    equals("5-18", dquery("5/25/11").prev().wednesday().format("m-d"));
+    equals("5-24", dquery("5/28/11").prev().tuesday().format("m-d"));
+    equals("5-17", dquery("5/24/11").prev().tuesday().format("m-d"));
+    equals("5-23", dquery("5/28/11").prev().monday().format("m-d"));
+    equals("5-16", dquery("5/23/11").prev().monday().format("m-d"));
 });

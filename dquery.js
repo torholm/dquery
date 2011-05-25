@@ -134,13 +134,60 @@ var dquery = function( fmt ) {
      * First week of every year is the week that contains 4 Jan.
      */
     date.getWeek = function() {
-        var oneDay = 24 * 60 * 60 * 1000;
-        var date = dquery( this ).resetTime().firstDayOfYear().set("date", 4);
-        var cmp = dquery( this ).resetTime();
-        while( date.getDay() != 1 )
-            date.setTime( date.getTime() - oneDay );
-        var weekMs = 7 * 24 * 60 * 60 * 1000; 
-        return Math.ceil((+cmp - +date) / weekMs) || 1;
+        var oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+
+        var date = dquery( this ).resetTime();
+
+        var firstMonday = dquery( this )
+                            .resetTime()
+                            .firstDayOfYear()
+                            .set("date", 4);
+        var firstMondayNextYear = dquery( firstMonday ).add(1).years();
+
+        firstMonday.add( -((firstMonday.getDay() + 6) % 7) ).days();
+        firstMondayNextYear.add( -((firstMondayNextYear.getDay() + 6) % 7) ).days();
+        console.log( firstMonday, date );
+        if( firstMondayNextYear <= date ) {
+            return 1;
+        } else if( date < firstMonday ) {
+            var yearBefore = dquery( this )
+                                .resetTime()
+                                .firstDayOfYear()
+                                .set("date", 4)
+                                .add(-1).years();
+            return Math.floor( (date - yearBefore) / oneWeekMs ) + 1;
+        } else if ( date < dquery( firstMonday ).add(7).days() ) {
+            return 1;
+        } else {
+            return Math.floor( (date - firstMonday) / oneWeekMs) + 1;
+        }
+    }
+
+    date.prev = function() {
+        var self = this;
+        return {
+            monday: function() {
+                return self.add(-((self.getDay() + 5) % 7 + 1)).days();
+            },
+            tuesday: function() {
+                return self.add(-((self.getDay() + 4) % 7 + 1)).days();
+            },
+            wednesday: function() {
+                return self.add(-((self.getDay() + 3) % 7 + 1)).days();
+            },
+            thursday: function() {
+                return self.add(-((self.getDay() + 2) % 7 + 1)).days();
+            },
+            friday: function() {
+                return self.add(-((self.getDay() + 1) % 7 + 1)).days();
+            },
+            saturday: function() {
+                return self.add(-((self.getDay()) % 7 + 1)).days();
+            },
+            sunday: function() {
+                return self.add(-((self.getDay() + 6) % 7 + 1)).days();
+            }
+        }
     }
 
     return date;
