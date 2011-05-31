@@ -50,6 +50,9 @@ var dquery = function( fmt ) {
                 return self;
             }
         });
+        ret.weeks = function() {
+            return self.add( value * 7 ).days();
+        }
         return ret;
     }
 
@@ -163,30 +166,28 @@ var dquery = function( fmt ) {
         }
     }
 
+    date.firstWeek = function() {
+        return this.prev().monday(true)
+                   .add(-this.getWeek() + 1).weeks();
+    }
+
     date.prev = function() {
         var self = this;
-        return {
-            monday: function() {
-                return self.add(-((self.getDay() + 5) % 7 + 1)).days();
-            },
-            tuesday: function() {
-                return self.add(-((self.getDay() + 4) % 7 + 1)).days();
-            },
-            wednesday: function() {
-                return self.add(-((self.getDay() + 3) % 7 + 1)).days();
-            },
-            thursday: function() {
-                return self.add(-((self.getDay() + 2) % 7 + 1)).days();
-            },
-            friday: function() {
-                return self.add(-((self.getDay() + 1) % 7 + 1)).days();
-            },
-            saturday: function() {
-                return self.add(-((self.getDay()) % 7 + 1)).days();
-            },
-            sunday: function() {
-                return self.add(-((self.getDay() + 6) % 7 + 1)).days();
+        function prevDay(offset, day) {
+            return function(prevOnSame) {
+                if( prevOnSame === true && day == self.getDay() )
+                    return self;
+                return self.add(-((self.getDay() + offset) % 7 + 1)).days();
             }
+        }
+        return {
+            monday: prevDay(5, 1),
+            tuesday: prevDay(4, 2),
+            wednesday: prevDay(3, 3),
+            thursday: prevDay(2, 4),
+            friday: prevDay(1, 5),
+            saturday: prevDay(0, 6),
+            sunday: prevDay(6, 0)
         }
     }
 
