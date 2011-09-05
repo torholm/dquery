@@ -38,6 +38,10 @@ test("should add two years", function() {
     equals("Tue May 21 2013", (dquery("5/21/2011").add(2).years() + "").substring(0, 15));
 });
 
+test("should add one week", function() {
+    //equals(
+});
+
 test("should add one hour", function() {
     equals("Sat May 21 2011 13:00:00", (dquery("5/21/2011 12:00").add(1).hours() + "").substring(0, 24));
 });
@@ -228,7 +232,7 @@ test("should determine yesterday, tomorrow, same date", function() {
 });
 
 
-module("values");
+module("week");
 test("should determine correct week", function() {
     equals(48, dquery("11/24/2009").getWeek());
     equals(21, dquery("5/24/2011").getWeek());
@@ -236,6 +240,11 @@ test("should determine correct week", function() {
     equals(1, dquery("12/30/2008").getWeek());
     equals(2, dquery("1/6/2020").getWeek());
     equals(1, dquery("1/5/2020").getWeek());
+});
+
+test("should go to first week of year", function() {
+    equals("2011-1-3", dquery("1/6/2011").firstWeek().format("yyyy-m-d"));
+    equals("2008-12-29", dquery("1/2/2010").firstWeek().format("yyyy-m-d"));
 });
 
 
@@ -255,4 +264,15 @@ test("should go to previous weekdays", function() {
     equals("5-17", dquery("5/24/11").prev().tuesday().format("m-d"));
     equals("5-23", dquery("5/28/11").prev().monday().format("m-d"));
     equals("5-16", dquery("5/23/11").prev().monday().format("m-d"));
+});
+
+test("shouldn't change when sending `true` to prev().tuesday() with same weekday", function() {
+    equals("5-31", dquery("5/31/11").prev().tuesday( true ).format("m-d"));
+});
+
+
+module("parse");
+test("should parse ISO 8601 yyyy-mm-dd HH:MM:ss", function() {
+    equals("2011-07-17 12:34:56", 
+           dquery("2011-07-17 12:34:56").format("yyyy-mm-dd HH:MM:ss"));
 });
