@@ -17,6 +17,10 @@ test("should parse date from 1 argument which is int timestamp", function() {
     equals("Mon May 16 2011", (dquery(1305496800000) + "").substring(0, 15));
 });
 
+test("should clone", function() {
+    equals(dquery(1305496800000).getTime(), dquery(1305496800000).clone().getTime());
+});
+
 
 module("reset");
 test("should reset time", function() {
@@ -128,7 +132,11 @@ module("functional");
 test("should each every date in month", function() {
     var expected = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
         actual = [];
-    dquery.iterate("days", dquery("5/1/2011"), dquery("5/31/2011"), function(date) {
+    dquery.iterate({
+        metric: "days", 
+        start: dquery("5/1/2011"), 
+        stop: dquery("5/31/2011") 
+    }, function(date) {
         actual.push( date.getDate() );
     });
     equals( String(actual), String(expected) );
@@ -137,10 +145,61 @@ test("should each every date in month", function() {
 test("should each hour between dates", function() {
     var expected = [0, 1, 2, 3, 4, 5, 6],
         actual = [];
-    dquery.iterate("hours", dquery("5/1/2011"), dquery("5/1/2011 06:00"), function( date ) {
+    dquery.iterate({
+        metric: "hours", 
+        start: dquery("5/1/2011"), 
+        stop: dquery("5/1/2011 06:00")
+    }, function( date ) {
         actual.push( date.getHours() );
     });
     equals( String(expected), String(actual) );
+});
+
+test("should each days between dates with step=2", function() {
+        var expected = [2, 4, 6, 8, 10, 12],
+        actual = [];
+    dquery.iterate({
+        metric: "days", 
+        start: dquery("5/2/2011"), 
+        stop: dquery("5/13/2011"),
+        step: 2
+    }, function(date) {
+        actual.push( date.getDate() );
+    });
+    equals( String(actual), String(expected) );
+});
+
+test("should collect all days between dates", function() {
+    var expect = [1,2,3,4,5];
+    var actual = dquery.collect({
+        metric: "days",
+        start: dquery("5/1/2011"),
+        stop: dquery("5/5/2011")
+    });
+    equals(5, actual.length);
+    for (var i = 0; i < 5; i++)
+        equals( actual[i].getDate(), expect[i] );
+});
+
+test("should collect using filter function", function() {
+    var expect = [1,2,4,8,16];
+    var x = 1;
+    var actual = dquery.collect({
+        metric: "days",
+        start: dquery("5/1/2011"),
+        stop: dquery("5/20/2011"),
+        filter: function(date, z) {
+            if (date.getDate() == x) {
+                x = x * 2;
+                return true;
+            }
+            return false;
+        }
+    });
+    console.log(actual, actual.length);
+    equals(5, actual.length);
+    for (var i = 0; i < 5; i++)
+        equals( actual[i].getDate(), expect[i] );
 });
 
 

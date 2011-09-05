@@ -58,6 +58,10 @@ dquery.methods = {
         return this.set("date", 1).set("month", 0).set("year", 1970);
     },
 
+    clone: function() {
+        return dquery(this);
+    },
+
     set: function( type, value ) {
         if( type && value === undefined ) {
             for( var prop in type ) {
@@ -324,14 +328,28 @@ dquery.extend = function( target, source ) {
     return target;
 }
 
-dquery.iterate = function( type, _start, _end, callback ) {
-    var start = dquery( _start ),
-        end = dquery( _end ),
+dquery.iterate = function( options, callback ) {
+    var start = dquery( options.start ),
+        stop = dquery( options.stop ),
+        metric = options.metric,
+        step = options.step || 1,
+        filter = options.filter,
         idx = 0;
-    while( start <= end ) {
-        callback( start, idx++ );
-        start[ "add" ](1)[ type ]();
+    while( start <= stop ) {
+        if( !filter || filter(start, idx) ) {
+            callback( start, idx );
+        }
+        idx++;
+        start = start.clone().add(step)[ metric ]();
     }
+}
+
+dquery.collect = function( options ) {
+    var ret = [];
+    dquery.iterate( options, function(val) { 
+        ret[ret.length] = val; 
+    });
+    return ret;
 }
 
 dquery.diff = function( _start, _end ) {
