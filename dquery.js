@@ -1,6 +1,5 @@
 ;(function(exports) {
-var dateproto = Date.prototype,
-    capitalize = function(str) {
+var capitalize = function(str) {
         return str.replace(/^(\w)/, function(_, f) {
             return f.toUpperCase()
         })
