@@ -29,7 +29,7 @@ modified.
 Example:
 
 ```javascript
-dquery().add(4).days().set({ hours: 20 });
+dquery().addDays(4).set({ hours: 20 });
 ```
 
 ### Some of the stuff you can do
@@ -55,7 +55,7 @@ if (something > new Date) {
 Add 4 years:
 
 ```javascript
-dquery("5/21/2011").add(4).years().toString()
+dquery("5/21/2011").addYears(4).toString()
 // Thu May 21 2015 00:00:00 GMT+0200 (CEST)
 ```
 
