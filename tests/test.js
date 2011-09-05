@@ -33,15 +33,15 @@ test("should reset date", function() {
 
 module("add");
 test("should add two days", function() {
-    equals("Mon May 23 2011", (dquery("5/21/2011").add(2).days() + "").substring(0, 15));
+    equals("Mon May 23 2011", (dquery("5/21/2011").addDays(2) + "").substring(0, 15));
 });
 
 test("should add two months", function() {
-    equals("Thu Jul 21 2011", (dquery("5/21/2011").add(2).months() + "").substring(0, 15));
+    equals("Thu Jul 21 2011", (dquery("5/21/2011").addMonths(2) + "").substring(0, 15));
 });
 
 test("should add two years", function() {
-    equals("Tue May 21 2013", (dquery("5/21/2011").add(2).years() + "").substring(0, 15));
+    equals("Tue May 21 2013", (dquery("5/21/2011").addYears(2) + "").substring(0, 15));
 });
 
 test("should add one week", function() {
@@ -49,32 +49,32 @@ test("should add one week", function() {
 });
 
 test("should add one hour", function() {
-    equals("Sat May 21 2011 13:00:00", (dquery("5/21/2011 12:00").add(1).hours() + "").substring(0, 24));
+    equals("Sat May 21 2011 13:00:00", (dquery("5/21/2011 12:00").addHours(1) + "").substring(0, 24));
 });
 
 test("should add one minute", function() {
-    equals("Sat May 21 2011 12:01:00", (dquery("5/21/2011 12:00").add(1).minutes() + "").substring(0, 24));
+    equals("Sat May 21 2011 12:01:00", (dquery("5/21/2011 12:00").addMinutes(1) + "").substring(0, 24));
 });
 
 test("should add one second", function() {
-    equals("Sat May 21 2011 12:00:01", (dquery("5/21/2011 12:00").add(1).seconds() + "").substring(0, 24));
+    equals("Sat May 21 2011 12:00:01", (dquery("5/21/2011 12:00").addSeconds(1) + "").substring(0, 24));
 });
 
 test("should go to previous day when adding a negative day value", function() {
-    equals("Sat May 21 2011", (dquery("5/22/2011").add(-1).days() + "").substring(0, 15));
+    equals("Sat May 21 2011", (dquery("5/22/2011").addDays(-1) + "").substring(0, 15));
 });
 
 
 test("should add n months", function() {
-    for (var i = 0; i < 5; i++) {
-        equals(4 + i, dquery("5/21/2011").add(i).months().getMonth());
+    for (var i = 0; i < 12; i++) {
+        equals(i, dquery("1/1/2011").addMonths(i).getMonth());
     }
 });
 
 
 module("first and last");
 test("should add 4 years and get first day of that year", function() {
-    equals("Thu Jan 01 2015", (dquery("5/21/2011").add(4).years().firstDayOfYear() + "").substring(0, 15));
+    equals("Thu Jan 01 2015", (dquery("5/21/2011").addYears(4).firstDayOfYear() + "").substring(0, 15));
 });
 
 test("should set last day in month", function() {
@@ -279,16 +279,16 @@ test("should format time short", function() {
 
 module("comparison");
 test("should return proper diff", function() {
-    equals(2, dquery.diff( dquery(), dquery().add(2).days() ).days );
-    equals(90, dquery.diff( dquery(), dquery().add(90).seconds() ).seconds );
-    equals(3, dquery.diff( dquery(), dquery().add(3).years() ).years );
+    equals(2, dquery.diff( dquery(), dquery().addDays(2) ).days );
+    equals(90, dquery.diff( dquery(), dquery().addSeconds(90) ).seconds );
+    equals(3, dquery.diff( dquery(), dquery().addYears(3) ).years );
 });
 
 test("should determine yesterday, tomorrow, same date", function() {
-    strictEqual( true, dquery().add(-1).days().isYesterday() );
-    strictEqual( true, dquery("1/1/11").add(-4).days().isYesterday( dquery("1/1/11").add(-3).days() ) );
-    strictEqual( true, dquery().add(1).days().isTomorrow() );
-    strictEqual( true, dquery("1/1/11").add(4).days().isTomorrow( dquery("1/1/11").add(3).days() ) );
+    strictEqual( true, dquery().addDays(-1).isYesterday() );
+    strictEqual( true, dquery("1/1/11").addDays(-4).isYesterday( dquery("1/1/11").addDays(-3) ) );
+    strictEqual( true, dquery().addDays(1).isTomorrow() );
+    strictEqual( true, dquery("1/1/11").addDays(4).isTomorrow( dquery("1/1/11").addDays(3) ) );
     strictEqual( true, dquery("1/1/11").sameDate( dquery("1/1/11") ) );
 });
 

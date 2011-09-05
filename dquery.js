@@ -1,13 +1,10 @@
 ;(function(exports) {
 var dateproto = Date.prototype,
-    addDates = [
-        { get: dateproto.getDate, set: dateproto.setDate, name: "days" },
-        { get: dateproto.getMonth, set: dateproto.setMonth, name: "months" },
-        { get: dateproto.getFullYear, set: dateproto.setFullYear, name: "years" },
-        { get: dateproto.getHours, set: dateproto.setHours, name: "hours" },
-        { get: dateproto.getMinutes, set: dateproto.setMinutes, name: "minutes" },
-        { get: dateproto.getSeconds, set: dateproto.setSeconds, name: "seconds" }
-    ],
+    capitalize = function(str) {
+        return str.replace(/^(\w)/, function(_, f) {
+            return f.toUpperCase()
+        })
+    },
     prefix = function( prefix, len, str ) {
         if( !str || !prefix )
             return str;
@@ -33,21 +30,53 @@ var dquery = function( fmt ) {
 }
 
 dquery.methods = {
-    add: function( value ) {
-        var ret = {},
-            self = this;
-        if( value === undefined )
-            value = 1;
-        dquery.each( addDates, function( fn ) {
-            ret[ fn.name ] = function() {
-                fn.set.apply( self, [ fn.get.apply( self ) + value ] );
-                return self;
-            }
-        });
-        ret.weeks = function() {
-            return self.add( value * 7 ).days();
-        }
-        return ret;
+    daysInMonth: function() {
+        var date = new Date(this);
+        date.setDate(1);
+        date.setMonth(date.getMonth() + 1);
+        date.setDate(0);
+        return date.getDate();
+    },
+
+    addMilliseconds: function(value) {
+        this.setTime(this.getTime() + value);
+        return this;
+    },
+
+    addSeconds: function(value) {
+        this.setSeconds(this.getSeconds() + value);
+        return this;
+    },
+
+    addMinutes: function(value) {
+        this.setMinutes(this.getMinutes() + value);
+        return this;
+    },
+
+    addHours: function(value) {
+        this.setHours(this.getHours() + value);
+        return this;
+    },
+
+    addDays: function(value) {
+        return this.addHours(value * 24);
+    },
+
+    addWeeks: function(value) {
+        return this.addDays( value * 7 );
+    },
+
+    addMonths: function(value) {
+        var date = this.getDate();
+        this.setDate(1);
+        this.setMonth(this.getMonth() + value);
+        this.setDate(Math.min(this.daysInMonth(), date));
+        return this;
+    },
+
+    addYears: function(value) {
+        this.addMonths(value * 12);
+        return this;
     },
 
     resetTime: function() {
@@ -100,7 +129,7 @@ dquery.methods = {
     },
 
     lastDayOfMonth: function() {
-        return this.add(1).months()
+        return this.addMonths(1)
                    .set("date", 0);
     },
 
@@ -124,11 +153,11 @@ dquery.methods = {
     },
 
     isYesterday: function( cmp ) {
-        return this.sameDate( dquery( cmp || new Date ).add(-1).days() );
+        return this.sameDate( dquery( cmp || new Date ).addDays(-1) );
     },
 
     isTomorrow: function( cmp ) {
-        return this.sameDate( dquery( cmp || new Date ).add(1).days() );
+        return this.sameDate( dquery( cmp || new Date ).addDays(1) );
     },
 
     /**
@@ -145,10 +174,10 @@ dquery.methods = {
                             .resetTime()
                             .firstDayOfYear()
                             .set("date", 4);
-        var firstMondayNextYear = dquery( firstMonday ).add(1).years();
+        var firstMondayNextYear = dquery( firstMonday ).addYears(1);
 
-        firstMonday.add( -((firstMonday.getDay() + 6) % 7) ).days();
-        firstMondayNextYear.add( -((firstMondayNextYear.getDay() + 6) % 7) ).days();
+        firstMonday.addDays( -((firstMonday.getDay() + 6) % 7) );
+        firstMondayNextYear.addDays( -((firstMondayNextYear.getDay() + 6) % 7) );
         if( firstMondayNextYear <= date ) {
             return 1;
         } else if( date < firstMonday ) {
@@ -156,9 +185,9 @@ dquery.methods = {
                                 .resetTime()
                                 .firstDayOfYear()
                                 .set("date", 4)
-                                .add(-1).years();
+                                .addYears(-1);
             return Math.floor( (date - yearBefore) / oneWeekMs ) + 1;
-        } else if ( date < dquery( firstMonday ).add(7).days() ) {
+        } else if ( date < dquery( firstMonday ).addDays(7) ) {
             return 1;
         } else {
             return Math.floor( (date - firstMonday) / oneWeekMs) + 1;
@@ -167,7 +196,7 @@ dquery.methods = {
 
     firstWeek: function() {
         return this.prev().monday(true)
-                   .add(-this.getWeek() + 1).weeks();
+                   .addWeeks(-this.getWeek() + 1);
     },
 
     prev: function() {
@@ -176,7 +205,7 @@ dquery.methods = {
             return function(prevOnSame) {
                 if( prevOnSame === true && day == self.getDay() )
                     return self;
-                return self.add(-((self.getDay() + offset) % 7 + 1)).days();
+                return self.addDays(-((self.getDay() + offset) % 7 + 1));
             }
         }
         return {
@@ -331,7 +360,7 @@ dquery.extend = function( target, source ) {
 dquery.iterate = function( options, callback ) {
     var start = dquery( options.start ),
         stop = dquery( options.stop ),
-        metric = options.metric,
+        metricFn = "add" + capitalize(options.metric),
         step = options.step || 1,
         filter = options.filter,
         idx = 0;
@@ -340,7 +369,7 @@ dquery.iterate = function( options, callback ) {
             callback( start, idx );
         }
         idx++;
-        start = start.clone().add(step)[ metric ]();
+        start = start.clone()[ metricFn ](step);
     }
 }
 
