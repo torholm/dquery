@@ -1,6 +1,8 @@
 module("core");
-test("should return undefined when instantiating with nonsense", function() {
-    equals(undefined, dquery("nonsense"));
+test("should throw error when instantiating with nonsense", function() {
+    raises(function() { 
+        dquery("nonsense");
+    })
 });
 
 test("should instantiate with default date", function() {

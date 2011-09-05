@@ -1,4 +1,4 @@
-;(function(window) {
+;(function(exports) {
 var dateproto = Date.prototype,
     addDates = [
         { get: dateproto.getDate, set: dateproto.setDate, name: "days" },
@@ -8,9 +8,6 @@ var dateproto = Date.prototype,
         { get: dateproto.getMinutes, set: dateproto.setMinutes, name: "minutes" },
         { get: dateproto.getSeconds, set: dateproto.setSeconds, name: "seconds" }
     ],
-    capitalize = function(s) {
-        return s.replace(/^(\w)/g, function(x) { return x.toUpperCase(); });
-    },
     prefix = function( prefix, len, str ) {
         if( !str || !prefix )
             return str;
@@ -30,7 +27,7 @@ var dquery = function( fmt ) {
         date = new Date();
     }
     if( !date || /Invalid/.test(date + "") )
-        return undefined;
+        throw new Error("Invalid date");
 
     return dquery.extend(date, dquery.methods);
 }
@@ -442,5 +439,5 @@ dquery.parse = function( str ) {
     return ret;
 }
 
-window.dquery = dquery;
-})(window);
+exports.dquery = dquery;
+})(typeof exports == "undefined" && window || exports);
