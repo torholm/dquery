@@ -196,7 +196,6 @@ test("should collect using filter function", function() {
             return false;
         }
     });
-    console.log(actual, actual.length);
     equals(5, actual.length);
     for (var i = 0; i < 5; i++)
         equals( actual[i].getDate(), expect[i] );
