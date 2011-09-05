@@ -32,7 +32,7 @@ Example:
 dquery().add(4).days().set({ hours: 20 });
 ```
 
-### Stuff you can do
+### Some of the stuff you can do
 
 Deal with a normal Date object:
 
