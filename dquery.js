@@ -101,9 +101,12 @@ dquery.methods = {
                 this.setDate( value );
             else if( type == "year" )
                 this.setFullYear( value );
-            else if( type == "month" )
+            else if( type == "month" ) {
+                var date = this.getDate();
+                this.setDate( 1 );
                 this.setMonth( value );
-            else if( type == "seconds" )
+                this.setDate(Math.min(this.daysInMonth(), date));
+            } else if( type == "seconds" )
                 this.setSeconds( value );
             else if( type == "minutes" )
                 this.setMinutes( value );
@@ -166,9 +169,7 @@ dquery.methods = {
      */
     getWeek: function() {
         var oneWeekMs = 7 * 24 * 60 * 60 * 1000;
-
         var date = dquery( this ).resetTime();
-
         var firstMonday = dquery( this )
                             .resetTime()
                             .firstDayOfYear()
@@ -194,27 +195,27 @@ dquery.methods = {
     },
 
     firstWeek: function() {
-        return this.prev().monday(true)
+        return this.prev("monday", { exceptSame: true })
                    .addWeeks(-this.getWeek() + 1);
     },
 
-    prev: function() {
-        var self = this;
-        function prevDay(offset, day) {
-            return function(prevOnSame) {
-                if( prevOnSame === true && day == self.getDay() )
-                    return self;
-                return self.addDays(-((self.getDay() + offset) % 7 + 1));
-            }
+    next: function(day, options) {
+        var idx = dquery.index( capitalize(day), dquery.i8n.weekdays ) % 7;
+        if (options && options.exceptSame && idx == this.getDay()) {
+            return this;
+        } else {
+            var step = 7 - (7 + this.getDay() - idx) % 7;
+            return this.addDays(step || 7);
         }
-        return {
-            monday: prevDay(5, 1),
-            tuesday: prevDay(4, 2),
-            wednesday: prevDay(3, 3),
-            thursday: prevDay(2, 4),
-            friday: prevDay(1, 5),
-            saturday: prevDay(0, 6),
-            sunday: prevDay(6, 0)
+    },
+
+    prev: function(day, options) {
+        var idx = dquery.index( capitalize(day), dquery.i8n.weekdays ) % 7;
+        if (options && options.exceptSame && idx == this.getDay()) {
+            return this;
+        } else {
+            var step = (this.getDay() + 7 - idx) % 7;
+            return this.addDays(-step || -7);
         }
     }
 };
@@ -397,6 +398,13 @@ dquery.diff = function( _start, _end ) {
         months: months,
         years: years
     }
+}
+
+dquery.index = function( elem, list ) {
+    for (var i = 0, l = list.length; i < l; i++)
+        if (list[i] === elem)
+            return i;
+    return -1;
 }
 
 /* Date parsing */

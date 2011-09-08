@@ -99,6 +99,10 @@ test("should set date to 16th of May 2011", function() {
     equals("Mon May 16 2011", (dquery("5/21/2011").set("date", 16) + "").substring(0, 15));
 });
 
+test("should set 29th of Feb when current date is 31st May", function() {
+    equals("Wed Feb 29 2012", String(dquery("3/31/2012").set("month", 1)).substring(0, 15));
+});
+
 test("should set month to june 2011", function() {
     equals("Tue Jun 21 2011", (dquery("5/21/2011").set("month", 5) + "").substring(0, 15));
 });
@@ -310,24 +314,32 @@ test("should go to first week of year", function() {
 
 module("prev");
 test("should go to previous weekdays", function() {
-    equals("5-29", dquery("5/30/11").prev().sunday().format("m-d"));
-    equals("5-22", dquery("5/29/11").prev().sunday().format("m-d"));
-    equals("5-28", dquery("5/30/11").prev().saturday().format("m-d"));
-    equals("5-21", dquery("5/28/11").prev().saturday().format("m-d"));
-    equals("5-27", dquery("5/28/11").prev().friday().format("m-d"));
-    equals("5-20", dquery("5/27/11").prev().friday().format("m-d"));
-    equals("5-26", dquery("5/28/11").prev().thursday().format("m-d"));
-    equals("5-19", dquery("5/26/11").prev().thursday().format("m-d"));
-    equals("5-25", dquery("5/28/11").prev().wednesday().format("m-d"));
-    equals("5-18", dquery("5/25/11").prev().wednesday().format("m-d"));
-    equals("5-24", dquery("5/28/11").prev().tuesday().format("m-d"));
-    equals("5-17", dquery("5/24/11").prev().tuesday().format("m-d"));
-    equals("5-23", dquery("5/28/11").prev().monday().format("m-d"));
-    equals("5-16", dquery("5/23/11").prev().monday().format("m-d"));
+    equals("5-29", dquery("5/30/11").prev("sunday").format("m-d"));
+    equals("5-22", dquery("5/29/11").prev("sunday").format("m-d"));
+    equals("5-28", dquery("5/30/11").prev("saturday").format("m-d"));
+    equals("5-21", dquery("5/28/11").prev("saturday").format("m-d"));
+    equals("5-27", dquery("5/28/11").prev("friday").format("m-d"));
+    equals("5-20", dquery("5/27/11").prev("friday").format("m-d"));
+    equals("5-26", dquery("5/28/11").prev("thursday").format("m-d"));
+    equals("5-19", dquery("5/26/11").prev("thursday").format("m-d"));
+    equals("5-25", dquery("5/28/11").prev("wednesday").format("m-d"));
+    equals("5-18", dquery("5/25/11").prev("wednesday").format("m-d"));
+    equals("5-24", dquery("5/28/11").prev("tuesday").format("m-d"));
+    equals("5-17", dquery("5/24/11").prev("tuesday").format("m-d"));
+    equals("5-23", dquery("5/28/11").prev("monday").format("m-d"));
+    equals("5-16", dquery("5/23/11").prev("monday").format("m-d"));
+});
+
+module("next");
+test("should go to next weekdays", function() {
+    equals("9-18", dquery("9/12/11").next("sunday").format("m-d"));
+    equals("9-18", dquery("9/11/11").next("sunday").format("m-d"));
+    equals("9-17", dquery("9/12/11").next("saturday").format("m-d"));
+    equals("9-17", dquery("9/10/11").next("saturday").format("m-d"));
 });
 
 test("shouldn't change when sending `true` to prev().tuesday() with same weekday", function() {
-    equals("5-31", dquery("5/31/11").prev().tuesday( true ).format("m-d"));
+    equals("5-31", dquery("5/31/11").prev("tuesday", { exceptSame: true }).format("m-d"));
 });
 
 
