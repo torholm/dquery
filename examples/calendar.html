@@ -46,7 +46,7 @@ function generateCalendar(cur) {
         metric: "weeks"
     }, function(date) {
         var row = $("<tr />");
-        date.daysInWeek().each(function(date) {
+        date.daysOfWeek().each(function(date) {
             var col = $("<td />");
             if (date.getMonth() != cur.getMonth() 
                         || date.getMonth() != cur.getMonth()) {
