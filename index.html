@@ -76,6 +76,12 @@
     <a href="#dquery.i8n.weekstart">dquery.i8n.weekstart</a>
     <a href="#dquery.i8n.months">dquery.i8n.months</a>
   </p>
+  <p class="method-list">
+    <strong>dquery.DateList object:</strong><br />
+    <a href="#dquery.DateList">dquery.DateList</a>
+    <a href="#dquery.DateList.each">each</a>
+    <a href="#dquery.DateList.map">map</a>
+  </p>
   <h2>dquery object functions:</h2>
 
   <a name="addDays"></a>
@@ -415,5 +421,31 @@ if (date.isYesterday()) {
   <a name="dquery.i8n.months"></a>
   <h3>dquery.i8n.months</h3>
   <p><strong>Array</strong> of language representations of months. Default is <code>["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "Mars", "April", "May", "June", "July", "August", "September", "October", "November", "December"]</code>.</p>
+
+  <a name="dquery.DateList"></a>
+  <h3>dquery.DateList</h3>
+  <p>dquery.DateList is a class that is supposed to hold a bunch of dates.</p>
+  <p>
+    It has utility functions, like <a href="#dquery.DateList.each">each</a> 
+    and <a href="#dquery.DateList.map">map</a>. Functions like <a href="#dquery.daysOfWeek">daysOfWeek</a> and <a href="#dquery.daysOfMonth">daysOfMonth</a> returns a <code>DateList</code> containing the results.
+  </p>
+
+  <a name="dquery.DateList.each"></a>
+  <h3>each( callback )</h3>
+  <p>Calls a callback function on each date in the list.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery().daysInWeek().each(function(date) {
+  alert(date);
+});
+</pre>
+
+  <a name="dquery.DateList.map"></a>
+  <h3>map( callback )</h3>
+  <p>Calls a callback function on each date in the list, and collects the return values from the callback function into a new list, which is returned.</p>
+  <h4>Example</h4>
+  <pre class="example">var formattedDays = dquery().daysInWeek().map(function(date) {
+  return date.format("yyyy-mm-dd");
+});
+</pre>
 </body>
 </html>
