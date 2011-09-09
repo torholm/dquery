@@ -2,6 +2,8 @@
 
 **Do not use this is production just yet -- its API is in an infant state currently and badly needs to get more stabilized**
 
+[Documentation](http://torholm.github.com/dquery/)
+
 ## Introduction
 
 **dquery** is supposed to be a useful tool for handling dates and times.
