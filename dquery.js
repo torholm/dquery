@@ -1,9 +1,10 @@
 ;(function(exports) {
 var capitalize = function(str) {
-        return str.replace(/^(\w)/, function(_, f) {
+        return str.toLowerCase().replace(/^(\w)/, function(_, f) {
             return f.toUpperCase()
         })
     },
+
     prefix = function( prefix, len, str ) {
         if( !str || !prefix )
             return str;
@@ -11,22 +12,28 @@ var capitalize = function(str) {
         while( str.length < len )
             str = prefix + str;
         return str;
-    };
+    },
+     
+    dquery = function( fmt ) {
+        var date;
+        if( fmt instanceof Date || typeof fmt == "number" ) {
+            date = new Date( fmt );
+        } else if( typeof fmt == "string" ) {
+            date = dquery.parse( fmt );
+        } else {
+            date = new Date();
+        }
+        if( !date || /Invalid/.test(date + "") )
+            throw new Error("Invalid date");
 
-var dquery = function( fmt ) {
-    var date;
-    if( fmt instanceof Date || typeof fmt == "number" ) {
-        date = new Date( fmt );
-    } else if( typeof fmt == "string" ) {
-        date = dquery.parse( fmt );
-    } else {
-        date = new Date();
-    }
-    if( !date || /Invalid/.test(date + "") )
-        throw new Error("Invalid date");
+        return dquery.extend(date, dquery.methods);
+    },
 
-    return dquery.extend(date, dquery.methods);
-}
+    dayIndex = function(day) {
+        return $d.index( capitalize(day), $d.i8n.weekdays );
+    },
+
+    $d = dquery;
 
 dquery.methods = {
     daysInMonth: function() {
@@ -170,19 +177,23 @@ dquery.methods = {
      * First week of every year is the week that contains 4 Jan.
      */
     getWeek: function() {
-        var oneWeekInMillisecs = 7 * 24 * 60 * 60 * 1000,
-            n = this.clone().next("sunday", { exceptSame: true });
+        var oneWeekInMillisecs = 7 * 24 * 60 * 60 * 1000;
+        var ws = dquery.i8n.weekstart;
+        var weekEndIdx = (dayIndex(ws) - 1) % 7;
+        var firstWeekContains = (weekEndIdx == 0) ? 4 : 1;
+        var weekEnd = dquery.i8n.weekdays[ weekEndIdx ];
+        var n = this.clone().next(weekEnd, { exceptSame: true });
 
-        if (n.getMonth() == 0 && n.getDate() == 4) {
-            return 1;
-        }
+        /* Get first day of first week of year */
+        n.set({ month: 0, date: firstWeekContains })
+            .prev(ws, { exceptSame: true });
 
-        /* Get first week of year */
-        n.set({ month: 0, date: 4 }).prev("monday", { exceptSame: true });
+        /* 
+         * Go to previous year if start of the first week is
+         * older than current date.
+         */
         if (this < n) {
-            n.addYears(-1)
-                .set({ month: 0, date: 4 })
-                .prev("monday", { exceptSame: true });
+            n.addYears(-1).prev(ws, { exceptSame: true });
         }
 
         return Math.floor((+this - +n) / oneWeekInMillisecs) + 1;
@@ -198,7 +209,7 @@ dquery.methods = {
     },
 
     next: function(day, options) {
-        var idx = dquery.index( capitalize(day), dquery.i8n.weekdays ) % 7;
+        var idx = dayIndex( day ) % 7;
         if (options && options.exceptSame && idx == this.getDay()) {
             return this;
         } else {
@@ -208,13 +219,36 @@ dquery.methods = {
     },
 
     prev: function(day, options) {
-        var idx = dquery.index( capitalize(day), dquery.i8n.weekdays ) % 7;
+        var idx = dayIndex( day ) % 7;
         if (options && options.exceptSame && idx == this.getDay()) {
             return this;
         } else {
             var step = (this.getDay() + 7 - idx) % 7;
             return this.addDays(-step || -7);
         }
+    },
+
+    daysOfWeek: function() {
+        var list = new dquery.DateList();
+        var first = this.clone()
+                        .prev(dquery.i8n.weekstart, { exceptSame: true });
+        for (var i = 0; i < 7; i++) {
+            list.push(first.clone());
+            first.addDays(1);
+        }
+        return list;
+    },
+
+    daysOfMonth: function() {
+        var list = new dquery.DateList();
+        var first = this.clone().firstDayOfMonth();
+        dquery.iterate({
+            start: first.clone(),
+            stop: first.clone().lastDayOfMonth()
+        }, function(item) {
+            list.push(item);
+        });
+        return list;
     }
 };
 
@@ -300,6 +334,7 @@ dquery.i8n["weekdays"] = [
     "Friday",
     "Saturday"
 ];
+dquery.i8n.weekstart = "monday";
 dquery.i8n["months"] = [
     "Jan",
     "Feb",
@@ -358,16 +393,16 @@ dquery.extend = function( target, source ) {
 dquery.iterate = function( options, callback ) {
     var start = dquery( options.start ),
         stop = dquery( options.stop ),
-        metricFn = "add" + capitalize(options.metric),
+        metricFn = "add" + capitalize(options.metric || "days"),
         step = options.step || 1,
         filter = options.filter,
         idx = 0;
     while( start <= stop ) {
         if( !filter || filter(start, idx) ) {
-            callback( start, idx );
+            callback( start.clone(), idx );
         }
         idx++;
-        start = start.clone()[ metricFn ](step);
+        start[ metricFn ](step);
     }
 }
 
@@ -399,9 +434,11 @@ dquery.diff = function( _start, _end ) {
 }
 
 dquery.index = function( elem, list ) {
-    for (var i = 0, l = list.length; i < l; i++)
-        if (list[i] === elem)
+    for (var i = 0, l = list.length; i < l; i++) {
+        if (list[i] === elem) {
             return i;
+        }
+    }
     return -1;
 }
 
@@ -489,7 +526,24 @@ dquery.parse = function( str ) {
         }
     });
     return ret;
-}
+};
+
+(function() {
+    var dateList = dquery.DateList = function() {
+    }
+
+    var proto = dateList.prototype = Array.prototype;
+
+    proto.each = function(callback) {
+        dquery.each(this, callback);
+    }
+
+    proto.map = function(callback) {
+        var list = new dateList;
+        list.push.apply(list, dquery.map(this, callback));
+        return list;
+    }
+}());
 
 exports.dquery = dquery;
 })(typeof exports == "undefined" && window || exports);

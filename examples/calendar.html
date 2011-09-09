@@ -28,8 +28,6 @@ function generateCalendar(cur) {
     $( "#current-date" ).text(cur.format("yyyy mmmm"));
     $( "#current" ).appendTo(cal);
 
-    var ts = +dquery();
-
     var start = cur.clone().firstDayOfMonth().prev("monday", { exceptSame: true });
     var stop = cur.clone().lastDayOfMonth().next("sunday", { exceptSame: true });
 
@@ -63,8 +61,6 @@ function generateCalendar(cur) {
     });
 
     $( "#calendar" ).replaceWith( cal );
-
-    console.log( +dquery() - ts );
 }
 
 $(function() {

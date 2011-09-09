@@ -306,6 +306,18 @@ test("should determine correct week", function() {
     equals(1, dquery("1/5/2020").getWeek());
 });
 
+test("should determine correct week with US weekstart", function() {
+    dquery.i8n.weekstart = "sunday";
+    equals(41, dquery("10/9/2009").getWeek());
+    dquery.i8n.weekstart = "monday";
+});
+
+test("should determine correct week with Middle Eastern weekstart", function() {
+    dquery.i8n.weekstart = "saturday";
+    equals(27, dquery("7/9/2011").getWeek());
+    dquery.i8n.weekstart = "monday";
+});
+
 test("should go to specified week", function() {
     equals(41, dquery("11/24/2009").setWeek(41).getWeek());
     equals(20, dquery("5/24/2011").setWeek(20).getWeek());
@@ -352,4 +364,36 @@ module("parse");
 test("should parse ISO 8601 yyyy-mm-dd HH:MM:ss", function() {
     equals("2011-07-17 12:34:56", 
            dquery("2011-07-17 12:34:56").format("yyyy-mm-dd HH:MM:ss"));
+});
+
+module("datelist");
+test("should get days in week", function() {
+    var expected = ["9-5", "9-6", "9-7", "9-8", "9-9", "9-10", "9-11"];
+    var actual = dquery("9/9/2011").daysOfWeek().map(function(date) {
+        return date.format("m-d");
+    });
+    equals(expected.length, actual.length);
+    var x = 0;
+    actual.each(function(item) {
+        equals(actual[x], expected[x]);
+        equals(item, expected[x]);
+        x++;
+    });
+    equals(x, expected.length);
+});
+
+test("should get days in month", function() {
+    var expected = ["9-1", "9-2", "9-3", "9-4", "9-5", "9-6", "9-7",
+                    "9-8", "9-9", "9-10", "9-11", "9-12", "9-13",
+                    "9-14", "9-15", "9-16", "9-17", "9-18", "9-19",
+                    "9-20", "9-21", "9-22", "9-23", "9-24", "9-25",
+                    "9-26", "9-27", "9-28", "9-29", "9-30"];
+    var actual = dquery("9/9/2011").daysOfMonth().map(function(date) {
+        return date.format("m-d");
+    });
+    equals(expected.length, actual.length);
+    actual.each(function(item, i) {
+        equals(actual[i], expected[i]);
+        equals(item, expected[i]);
+    });
 });
