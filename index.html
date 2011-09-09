@@ -1,1 +1,414 @@
-Foo
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>dquery docs</title>
+    <style>
+    body { font-family: helvetica, arial; font-size: 14px; }
+    a { color: #05a; }
+    a:hover { background: #05a; color: #fff; }
+    .method-list a {
+      display: inline-block;
+      padding: 0 7px;
+    }
+    h1, h2 { border-bottom: 2px solid #ccc; }
+    h3 { background: #eee; padding: 5px 0; border-bottom: 1px solid #ddd; margin-top: 40px; }
+    span.result { background: #fde; }
+    .example { 
+      border: 1px solid #dfdfdf;
+      background: #f2f2f2; 
+      margin: 5px 20px;
+      padding: 5px;
+      max-width: 500px;
+      overflow: auto;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+    }
+    </style>
+  </head>
+<body>
+  <h1>dquery documentation</h1>
+  <p class="method-list">
+    <strong>dquery object functions:</strong><br />
+    <a href="#addDays">addDays</a>
+    <a href="#addHours">addHours</a> 
+    <a href="#addMilliseconds">addMilliseconds</a>
+    <a href="#addMinutes">addMinutes</a>
+    <a href="#addMonths">addMonths</a>
+    <a href="#addSeconds">addSeconds</a>
+    <a href="#addWeeks">addWeeks</a>
+    <a href="#addYears">addYears</a>
+    <a href="#clone">clone</a> 
+    <a href="#daysInMonth">daysInMonth</a>
+    <a href="#daysOfMonth">daysOfMonth</a>
+    <a href="#daysOfWeek">daysOfWeek</a>
+    <a href="#firstDayOfMonth">firstDayOfMonth</a>
+    <a href="#firstDayOfYear">firstDayOfYear</a>
+    <a href="#firstWeek">firstWeek</a>
+    <a href="#format">format</a>
+    <a href="#getWeek">getWeek</a>
+    <a href="#isTomorrow">isTomorrow</a>
+    <a href="#isYesterday">isYesterday</a>
+    <a href="#lastDayOfMonth">lastDayOfMonth</a>
+    <a href="#lastDayOfYear">lastDayOfYear</a>
+    <a href="#next">next</a>
+    <a href="#prev">prev</a>
+    <a href="#resetDate">resetDate</a>
+    <a href="#resetTime">resetTime</a>
+    <a href="#sameDate">sameDate</a>
+    <a href="#set">set</a>
+    <a href="#setWeek">setWeek</a>
+  </p>
+  <p class="method-list">
+    <strong>dquery functions/properties:</strong><br />
+    <a href="#dquery.collect">dquery.collect</a>
+    <a href="#dquery.iterate">dquery.iterate</a>
+  </p>
+  <p class="method-list">
+    <strong>i8n:</strong><br />
+    <a href="#dquery.i8n.ampm">dquery.i8n.ampm</a>
+    <a href="#dquery.i8n.weekdays">dquery.i8n.weekdays</a>
+    <a href="#dquery.i8n.weekstart">dquery.i8n.weekstart</a>
+    <a href="#dquery.i8n.months">dquery.i8n.months</a>
+  </p>
+  <h2>dquery object functions:</h2>
+
+  <a name="addDays"></a>
+  <h3>addDays( days )</h3>
+  <p> Adds days to current date. </p>
+  <h4>Example</h4>
+  <pre class="example">
+    dquery("2011-09-09").addDays(5);
+  </pre>
+
+  <a name="addHours"></a>
+  <h3>addHours( hours )</h3>
+  <p> Adds hours to current date. </p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addHours(10);</pre>
+
+  <a name="addMilliseconds"></a>
+  <h3>addMilliseconds( milliSecs )</h3>
+  <p>Adds milliseconds to current date.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addMilliseconds(20);</pre>
+
+  <a name="addMinutes"></a>
+  <h3>addMinutes( minutes )</h3>
+  <p>Adds minutes to current date.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addMinutes(50);</pre>
+
+  <a name="addMonths"></a>
+  <h3>addMonths( months )</h3>
+  <p>Adds months to current date.</p>
+  <p><strong>Note!</strong> If you change to a month that have fewer days than the current date, the date will be the last day of the new month.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addMonths(20)</pre>
+
+  <a name="addSeconds"></a>
+  <h3>addSeconds( seconds )</h3>
+  <p>Adds seconds to current date.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addSeconds(20);</pre>
+
+  <a name="addWeeks"></a>
+  <h3>addWeeks( weeks )</h3>
+  <p>Adds weeks to current date.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addWeeks(4);</pre>
+
+  <a name="addYears"></a>
+  <h3>addYears( years )</h3>
+  <p>Adds years to current date.</p>
+  <h4>Example</h4>
+  <pre class="example">dquery("2011-09-09").addYears(9);</pre>
+
+  <a name="clone"></a>
+  <h3>clone()</h3>
+  <p>Creates an exact clone -- a new instance -- of current date.</p>
+  <p>
+    Use this, for example, to get a throw-away instance that you can
+    mess around with without modifying the original date.
+  </p>
+  <h4>Example</h4>
+  <pre class="example">var foo = dquery();
+var bar = foo.clone();</pre>
+
+  <a name="daysInMonth"></a>
+  <h3>daysInMonth()</h3>
+  <p>Returns the amount of days of the current date's month.</p>
+  <h4>Example</h4>
+  <pre class="example">var daysInSeptember = dquery("2011-09-01").daysInMonth();</pre>
+
+  <a name="daysOfMonth"></a>
+  <h3>daysOfMonth()</h3>
+  <p>Returns a <a href="#dquery.DateList">date list</a> of all the days of the current month.</p>
+  <h4>Example</h4>
+  <pre class="example">var days = dquery().daysOfMonth();
+days.each(function(date) { 
+  alert(date);
+});</pre>
+
+  <a name="daysOfWeek"></a>
+  <h3>daysOfWeek()</h3>
+  <p>Returns a <a href="#dquery.DateList">date list</a> of all the days of the current date's week.</p>
+  <h4>Example</h4>
+  <pre class="example">var days = dquery().daysOfWeek();
+days.each(function(date) {
+  alert(date);
+});</pre>
+
+  <a name="firstDayOfMonth"></a>
+  <h3>firstDayOfMonth()</h3>
+  <p>Changes the day to the first day of the current date's month.</p>
+  <h4>Example</h4>
+  <pre class="example">var foo = dquery().firstDayOfMonth();</pre>
+
+  <a name="firstDayOfYear"></a>
+  <h3>firstDayOfYear()</h3>
+  <p>Changes the day to the first day of the current date's year.</p>
+  <h4>Example</h4>
+  <pre class="example">var foo = dquery().firstDayOfYear();</pre>
+
+  <a name="firstWeek"></a>
+  <h3>firstWeek()</h3>
+  <p>Changes to the first week of the year.</p>
+  <h4>Example</h4>
+  <pre class="example">var bar = dquery().firstWeek();</pre>
+
+  <a name="format"></a>
+  <h3>format( formatString )</h3>
+  <p>Formats the current date according to the rules specified by the formatString.</p>
+  <table>
+    <tr><td>HH</td><td>Hour (00-23)</td></tr>
+    <tr><td>H</td><td>Hour (0-23)</td></tr>
+    <tr><td>h</td><td>Hour (0-12)</td></tr>
+    <tr><td>hh</td><td>Hour (00-12)</td></tr>
+    <tr><td>M</td><td>Minute (0-59)</td></tr>
+    <tr><td>MM</td><td>Minute (00-59)</td></tr>
+    <tr><td>s</td><td>Second (0-59)</td></tr>
+    <tr><td>ss</td><td>Second (00-59)</td></tr>
+    <tr><td>yy</td><td>Year (00-99)</td></tr>
+    <tr><td>yyyy</td><td>Year (0000-9999)</td></tr>
+    <tr><td>m</td><td>Month (1-12)</td></tr>
+    <tr><td>mm</td><td>Month (01-12)</td></tr>
+    <tr><td>mmm</td><td>Month (Jan-Feb)</td></tr>
+    <tr><td>mmmm</td><td>Month (January-February)</td></tr>
+    <tr><td>dddd</td><td>Day (Monday-Sunday)</td></tr>
+    <tr><td>ddd</td><td>Day (Mon-Sun)</td></tr>
+    <tr><td>dd</td><td>Day (01-31)</td></tr>
+    <tr><td>d</td><td>Day (1-31)</td></tr>
+    <tr><td>a</td><td>AM/PM</td></tr>
+  </table>
+  <h4>Example</h4>
+  <pre class="example">dquery().format("yyyy-mm-dd");
+dquery().format("d mmm yyyy, hh:MMa");</pre>
+
+  <a name="getWeek"></a>
+  <h3>getWeek</h3>
+  <p>Gets the current week number. Depends on <a href="#dquery.i8n.weekstart">weekstart</a> configuration.</p>
+  <h4>Example</h4>
+  <pre class="example">var currentWeek = dquery().getWeek();</pre>
+
+  <a name="isTomorrow"></a>
+  <h3>isTomorrow</h3>
+  <p>Returns whether day is tomorrow.</p>
+  <h4>Example</h4>
+  <pre class="example">var date = dquery("some date"); 
+if (date.isTomorrow()) {
+  alert("Tomorrow!");
+}</pre>
+
+  <a name="isYesterday"></a>
+  <h3>isYesterday</h3>
+  <p>Returns whether day is yesterday.</p>
+  <h4>Example</h4>
+  <pre class="example">var date = dquery("some date");
+if (date.isYesterday()) {
+  alert("Yesterday!");
+}</pre>
+
+  <a name="lastDayOfMonth"></a>
+  <h3>lastDayOfMonth()</h3>
+  <p>Sets date to last day of current date's month.</p>
+  <h4>Example</h4>
+  <pre class="example">var foo = dquery().lastDayOfMonth();</pre>
+
+  <a name="lastDayOfYear"></a>
+  <h3>lastDayOfYear()</h3>
+  <p>Sets date to the last day of the current date's year.</p>
+  <h4>Example</h4>
+  <pre class="example">var foo = dquery().lastDayOfYear();</pre>
+
+  <a name="next"></a>
+  <h3>next( day [, options ] )</h3>
+  <p>Skips to the next day which matches ``day''.</p>
+  <table>
+    <tr>
+    <td>
+      <code>day</code>
+    </td>
+    <td> 
+      should be either 
+      <code>"sunday"</code>, <code>"monday"</code>, <code>"tuesday"</code>,
+      <code>"wednesday"</code>, <code>"thursday"</code>, <code>"friday"</code>,
+      <code>"saturday"</code>
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>options</code> (optional)
+    </td>
+    <td>should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
+    </td>
+    </tr>
+  </table>
+
+  <a name="prev"></a>
+  <h3>prev( day [, options ] )</h3>
+  <p>Skips to the previous day which matches ``day''.</p>
+  <table>
+    <tr>
+    <td>
+      <code>day</code>
+    </td>
+    <td> 
+      should be either 
+      <code>"sunday"</code>, <code>"monday"</code>, <code>"tuesday"</code>,
+      <code>"wednesday"</code>, <code>"thursday"</code>, <code>"friday"</code>,
+      <code>"saturday"</code>
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>options</code> (optional)
+    </td>
+    <td>should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
+    </td>
+    </tr>
+  </table>
+
+  <a name="resetDate"></a>
+  <h3>resetDate()</h3>
+  <p>Resets date to <code>1970-01-01</code></p>
+
+  <a name="resetTime"></a>
+  <h3>resetTime()</h3>
+  <p>Resets time to <code>00:00:00.0</code></p>
+
+  <a name="sameDate"></a>
+  <h3>sameDate( date )</h3>
+  <p>Compares to <code>date</code>. Returns true if year, month and date is the same.</p>
+
+  <a name="set"></a>
+  <h3>set( unit, value )</h3>
+  <h3>set( options )</h3>
+  <p>Sets unit to value.</p>
+  <table>
+    <tr>
+    <td>
+      <code>unit</code>
+    </td>
+    <td>
+      can be <code>"date"</code>, <code>"year"</code>, <code>"month"</code>,
+      <code>"seconds"</code>, <code>"minutes"</code>, <code>"hours"</code>,
+      <code>"ms"</code>.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>value</td>
+    </td>
+    <td>
+      any numeric value that applies to <code>unit</code>.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>options</code>
+    </td>
+    <td>
+      map that contains units/value.<br />
+      See <code>unit</code> parameter above.
+    </td>
+    </tr>
+  </table>
+
+  <a name="setWeek"></a>
+  <h3>setWeek( week )</h3>
+  <p>Sets week to <code>week</code>.</p>
+
+  <a name="dquery.collect"></a>
+  <h3>dquery.collect( options )</h3>
+  <p>Does the same as <a href="#dquery.iterate">dquery.iterate</a>, except that it returns a list of all the iterated values.</p>
+
+  <a name="dquery.iterate"></a>
+  <h3>dquery.iterate( options, callback )</h3>
+  <p>
+    Runs through all dates between a <code>start</code> and a <code>stop</code> date.
+  </p>
+  <table>
+    <tr>
+    <td>
+      <code>start</code>
+    </td>
+    <td>
+      Start date. Can be of type <code>Date</code>, <code>dquery</code>, a valid date string, or a timestamp.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>stop</code>
+    </td>
+    <td>
+      Stop date. Can be of type <code>Date</code>, <code>dquery</code>, a valid date string, or a timestamp.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>metric</code>
+    </td>
+    <td>
+      What unit to increment. Can be <code>"milliseconds"</code>, 
+      <code>"seconds"</code>, <code>"minutes"</code>, <code>"hours"</code>,
+      <code>"days"</code>, <code>"weeks"</code>, <code>"months"</code>,
+      <code>"years"</code>.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>step</code>
+    </td>
+    <td>
+      How much to increment at each step. Default is <code>1</code>.
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <code>filter</code>
+    </td>
+    <td>
+      <strong>function( date )</strong><br />
+      <code>callback</code> will be called if function returns true. <code>date</code> is the current iterated date.
+    </td>
+    </tr>
+  </table>
+  
+  <a name="dquery.i8n.ampm"></a>
+  <h3>dquery.i8n.ampm</h3>
+  <p><strong>Array</strong> of language representation of am/pm. Default is <code>["am", "pm"]</code>.</p>
+
+  <a name="dquery.i8n.weekdays"></a>
+  <h3>dquery.i8n.weekdays</h3>
+  <p><strong>Array</strong> of language representations of weekdays. Default is <code>["Sun", "Mon", Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]</code>.</p>
+
+  <a name="dquery.i8n.weekstart"></a>
+  <h3>dquery.i8n.weekstart</h3>
+  <p><strong>String</strong> of which day a week starts from. Default is <code>"monday"</code>.</p>
+
+  <a name="dquery.i8n.months"></a>
+  <h3>dquery.i8n.months</h3>
+  <p><strong>Array</strong> of language representations of months. Default is <code>["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "Mars", "April", "May", "June", "July", "August", "September", "October", "November", "December"]</code>.</p>
+</body>
+</html>
