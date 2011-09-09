@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dquery Calendar example</title>
+  <script src="../dquery.js"></script>
+  <script src="jquery.js"></script>
+</head>
+<body>
+<table id="calendar">
+  <tr id="current">
+    <td>
+      <a href="javascript:void(0)" id="prev-month">Prev</a>
+    </td>
+    <td colspan="5">
+      <span id="current-date"></span>
+    </td>
+    <td>
+      <a href="javascript:void(0)" id="next-month">Next</a>
+    </td>
+  </tr>
+</table>
+
+</table>
+
+<script type="text/javascript">
+function generateCalendar(cur) {
+    var cal = $("<table />", { id: "calendar" });
+    $( "#current-date" ).text(cur.format("yyyy mmmm"));
+    $( "#current" ).appendTo(cal);
+
+    var ts = +dquery();
+
+    var start = cur.clone().firstDayOfMonth().prev("monday", { exceptSame: true });
+    var stop = cur.clone().lastDayOfMonth().next("sunday", { exceptSame: true });
+
+    var header = $("<tr />", { class: "header" });
+    dquery.iterate({ 
+        start: start, 
+        stop: start.clone().next("sunday")
+    }, function(date) {
+        $("<td />").text(date.format("ddd")).appendTo(header);
+    });
+    header.appendTo(cal);
+
+    dquery.iterate({
+        start: start,
+        stop: stop,
+        metric: "weeks"
+    }, function(date) {
+        var row = $("<tr />");
+        date.daysInWeek().each(function(date) {
+            var col = $("<td />");
+            if (date.getMonth() != cur.getMonth() 
+                        || date.getMonth() != cur.getMonth()) {
+                col.addClass("not-in-month");
+            } else {
+                col.addClass("in-month");
+            }
+            col.text(date.getDate());
+            col.appendTo(row);
+        });
+        row.appendTo(cal);
+    });
+
+    $( "#calendar" ).replaceWith( cal );
+
+    console.log( +dquery() - ts );
+}
+
+$(function() {
+    var current = dquery();
+    generateCalendar(current);
+
+    $( "#prev-month" ).click(function() {
+        generateCalendar(current.addMonths(-1));
+    });
+
+    $( "#next-month" ).click(function() {
+        generateCalendar(current.addMonths(1));
+    });
+});
+</script>
+<style>
+body { font-family: helvetica, arial; font-size: 14px; }
+.header { background: #eee; }
+table, td { border: 1px solid #bbb; border-collapse: collapse; }
+td { padding: 5px; }
+.not-in-month { color: #888; }
+.in-month { font-weight: bold; }
+</style>
+</body>
+</html>
