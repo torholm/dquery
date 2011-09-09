@@ -306,6 +306,11 @@ test("should determine correct week", function() {
     equals(1, dquery("1/5/2020").getWeek());
 });
 
+test("should go to specified week", function() {
+    equals(41, dquery("11/24/2009").setWeek(41).getWeek());
+    equals(20, dquery("5/24/2011").setWeek(20).getWeek());
+});
+
 test("should go to first week of year", function() {
     equals("2011-1-3", dquery("1/6/2011").firstWeek().format("yyyy-m-d"));
     equals("2008-12-29", dquery("1/2/2010").firstWeek().format("yyyy-m-d"));

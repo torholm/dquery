@@ -141,7 +141,9 @@ dquery.methods = {
 
     format: function( fmt ) {
         var self = this;
-        return fmt.replace(/((d+){1,4}|(m+){1,4}|yy(?:yy)?|HH?|ss?|MM?|hh?|a)/g, function( _, k ) {
+        return fmt.replace(
+            /((d+){1,4}|(m+){1,4}|yy(?:yy)?|HH?|ss?|MM?|hh?|a)/g,
+        function( _, k ) {
             if( dquery.formatTable[ k ] )
                 return dquery.formatTable[ k ].apply( self );
             return "";
@@ -168,35 +170,31 @@ dquery.methods = {
      * First week of every year is the week that contains 4 Jan.
      */
     getWeek: function() {
-        var oneWeekMs = 7 * 24 * 60 * 60 * 1000;
-        var date = dquery( this ).resetTime();
-        var firstMonday = dquery( this )
-                            .resetTime()
-                            .firstDayOfYear()
-                            .set("date", 4);
-        var firstMondayNextYear = dquery( firstMonday ).addYears(1);
+        var oneWeekInMillisecs = 7 * 24 * 60 * 60 * 1000,
+            n = this.clone().next("sunday", { exceptSame: true });
 
-        firstMonday.addDays( -((firstMonday.getDay() + 6) % 7) );
-        firstMondayNextYear.addDays( -((firstMondayNextYear.getDay() + 6) % 7) );
-        if( firstMondayNextYear <= date ) {
+        if (n.getMonth() == 0 && n.getDate() == 4) {
             return 1;
-        } else if( date < firstMonday ) {
-            var yearBefore = dquery( this )
-                                .resetTime()
-                                .firstDayOfYear()
-                                .set("date", 4)
-                                .addYears(-1);
-            return Math.floor( (date - yearBefore) / oneWeekMs ) + 1;
-        } else if ( date < dquery( firstMonday ).addDays(7) ) {
-            return 1;
-        } else {
-            return Math.floor( (date - firstMonday) / oneWeekMs) + 1;
         }
+
+        /* Get first week of year */
+        n.set({ month: 0, date: 4 }).prev("monday", { exceptSame: true });
+        if (this < n) {
+            n.addYears(-1)
+                .set({ month: 0, date: 4 })
+                .prev("monday", { exceptSame: true });
+        }
+
+        return Math.floor((+this - +n) / oneWeekInMillisecs) + 1;
     },
 
     firstWeek: function() {
         return this.prev("monday", { exceptSame: true })
                    .addWeeks(-this.getWeek() + 1);
+    },
+
+    setWeek: function(week) {
+        return this.addWeeks(-this.getWeek() + week);
     },
 
     next: function(day, options) {
