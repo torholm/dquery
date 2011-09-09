@@ -17,18 +17,46 @@
       padding: 0 7px;
     }
     h1, h2 { border-bottom: 2px solid #ccc; }
-    h3 { background: #eee; padding: 5px 0; border-bottom: 1px solid #ddd; margin-top: 40px; }
+    p { 
+      margin: 15px 0;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+    h3 { 
+      font-family: georgia, "times new roman", serif;
+      margin: 0;
+      padding: 5px 0 5px 0; 
+      margin-top: 15px;
+      background: #eee;
+    }
+    h3 + h3 { 
+      margin-top: 0px;
+    }
     span.result { background: #fde; }
     .example { 
       border: 1px solid #dfdfdf;
       background: #f2f2f2; 
-      margin: 5px 20px;
+      margin: 5px 20px 30px 20px;
       padding: 5px;
       max-width: 500px;
       overflow: auto;
+      font-size: 12px;
+      color: #000;
       -webkit-border-radius: 10px;
       -moz-border-radius: 10px;
       border-radius: 10px;
+    }
+    table {
+      margin-left: 20px;
+      border-collapse: collapse;
+      -webkit-box-shadow: 0 0 4px #ddd;
+      margin-bottom: 30px;
+    }
+    td { 
+      background: #fff;
+      padding: 5px;
+      border: 1px solid #ddd;
     }
     </style>
   </head>
@@ -66,7 +94,8 @@
     <a href="#setWeek">setWeek</a>
   </p>
   <p class="method-list">
-    <strong>dquery functions/properties:</strong><br />
+    <strong>dquery core:</strong><br />
+    <a href="#dquery">dquery</a>
     <a href="#dquery.collect">dquery.collect</a>
     <a href="#dquery.iterate">dquery.iterate</a>
   </p>
@@ -83,15 +112,14 @@
     <a href="#dquery.DateList.each">each</a>
     <a href="#dquery.DateList.map">map</a>
   </p>
-  <h2>dquery object functions:</h2>
+
+  <h2>dquery object functions</h2>
 
   <a name="addDays"></a>
   <h3>addDays( days )</h3>
   <p> Adds days to current date. </p>
   <h4>Example</h4>
-  <pre class="example">
-    dquery("2011-09-09").addDays(5);
-  </pre>
+  <pre class="example">dquery("2011-09-09").addDays(5);</pre>
 
   <a name="addHours"></a>
   <h3>addHours( hours )</h3>
@@ -193,25 +221,25 @@ days.each(function(date) {
   <h3>format( formatString )</h3>
   <p>Formats the current date according to the rules specified by the formatString.</p>
   <table>
-    <tr><td>HH</td><td>Hour (00-23)</td></tr>
-    <tr><td>H</td><td>Hour (0-23)</td></tr>
-    <tr><td>h</td><td>Hour (0-12)</td></tr>
-    <tr><td>hh</td><td>Hour (00-12)</td></tr>
-    <tr><td>M</td><td>Minute (0-59)</td></tr>
-    <tr><td>MM</td><td>Minute (00-59)</td></tr>
-    <tr><td>s</td><td>Second (0-59)</td></tr>
-    <tr><td>ss</td><td>Second (00-59)</td></tr>
-    <tr><td>yy</td><td>Year (00-99)</td></tr>
-    <tr><td>yyyy</td><td>Year (0000-9999)</td></tr>
-    <tr><td>m</td><td>Month (1-12)</td></tr>
-    <tr><td>mm</td><td>Month (01-12)</td></tr>
-    <tr><td>mmm</td><td>Month (Jan-Feb)</td></tr>
-    <tr><td>mmmm</td><td>Month (January-February)</td></tr>
-    <tr><td>dddd</td><td>Day (Monday-Sunday)</td></tr>
-    <tr><td>ddd</td><td>Day (Mon-Sun)</td></tr>
-    <tr><td>dd</td><td>Day (01-31)</td></tr>
-    <tr><td>d</td><td>Day (1-31)</td></tr>
-    <tr><td>a</td><td>AM/PM</td></tr>
+    <tr><td valign="top">HH</td><td valign="top">Hour (00-23)</td></tr>
+    <tr><td valign="top">H</td><td valign="top">Hour (0-23)</td></tr>
+    <tr><td valign="top">h</td><td valign="top">Hour (0-12)</td></tr>
+    <tr><td valign="top">hh</td><td valign="top">Hour (00-12)</td></tr>
+    <tr><td valign="top">M</td><td valign="top">Minute (0-59)</td></tr>
+    <tr><td valign="top">MM</td><td valign="top">Minute (00-59)</td></tr>
+    <tr><td valign="top">s</td><td valign="top">Second (0-59)</td></tr>
+    <tr><td valign="top">ss</td><td valign="top">Second (00-59)</td></tr>
+    <tr><td valign="top">yy</td><td valign="top">Year (00-99)</td></tr>
+    <tr><td valign="top">yyyy</td><td valign="top">Year (0000-9999)</td></tr>
+    <tr><td valign="top">m</td><td valign="top">Month (1-12)</td></tr>
+    <tr><td valign="top">mm</td><td valign="top">Month (01-12)</td></tr>
+    <tr><td valign="top">mmm</td><td valign="top">Month (Jan-Feb)</td></tr>
+    <tr><td valign="top">mmmm</td><td valign="top">Month (January-February)</td></tr>
+    <tr><td valign="top">dddd</td><td valign="top">Day (Monday-Sunday)</td></tr>
+    <tr><td valign="top">ddd</td><td valign="top">Day (Mon-Sun)</td></tr>
+    <tr><td valign="top">dd</td><td valign="top">Day (01-31)</td></tr>
+    <tr><td valign="top">d</td><td valign="top">Day (1-31)</td></tr>
+    <tr><td valign="top">a</td><td valign="top">AM/PM</td></tr>
   </table>
   <h4>Example</h4>
   <pre class="example">dquery().format("yyyy-mm-dd");
@@ -258,10 +286,10 @@ if (date.isYesterday()) {
   <p>Skips to the next day which matches ``day''.</p>
   <table>
     <tr>
-    <td>
+    <td valign="top">
       <code>day</code>
     </td>
-    <td> 
+    <td valign="top"> 
       should be either 
       <code>"sunday"</code>, <code>"monday"</code>, <code>"tuesday"</code>,
       <code>"wednesday"</code>, <code>"thursday"</code>, <code>"friday"</code>,
@@ -269,10 +297,10 @@ if (date.isYesterday()) {
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>options</code> (optional)
     </td>
-    <td>should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
+    <td valign="top">should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
     </td>
     </tr>
   </table>
@@ -282,10 +310,10 @@ if (date.isYesterday()) {
   <p>Skips to the previous day which matches ``day''.</p>
   <table>
     <tr>
-    <td>
+    <td valign="top">
       <code>day</code>
     </td>
-    <td> 
+    <td valign="top"> 
       should be either 
       <code>"sunday"</code>, <code>"monday"</code>, <code>"tuesday"</code>,
       <code>"wednesday"</code>, <code>"thursday"</code>, <code>"friday"</code>,
@@ -293,10 +321,10 @@ if (date.isYesterday()) {
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>options</code> (optional)
     </td>
-    <td>should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
+    <td valign="top">should be an object. Properties: <code>exceptSame</code> which can be <code>true</code>/<code>false</code>. Default is <code>false</code>. If <code>true</code>, dquery won't do anything if the current date's day is the same as <code>day</code>.
     </td>
     </tr>
   </table>
@@ -319,28 +347,28 @@ if (date.isYesterday()) {
   <p>Sets unit to value.</p>
   <table>
     <tr>
-    <td>
+    <td valign="top">
       <code>unit</code>
     </td>
-    <td>
+    <td valign="top">
       can be <code>"date"</code>, <code>"year"</code>, <code>"month"</code>,
       <code>"seconds"</code>, <code>"minutes"</code>, <code>"hours"</code>,
       <code>"ms"</code>.
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>value</td>
     </td>
-    <td>
+    <td valign="top">
       any numeric value that applies to <code>unit</code>.
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>options</code>
     </td>
-    <td>
+    <td valign="top">
       map that contains units/value.<br />
       See <code>unit</code> parameter above.
     </td>
@@ -350,6 +378,48 @@ if (date.isYesterday()) {
   <a name="setWeek"></a>
   <h3>setWeek( week )</h3>
   <p>Sets week to <code>week</code>.</p>
+
+  <h2>dquery core</h2>
+  <a name="dquery"></a>
+  <h3>dquery( timestamp )</h3>
+  <h3>dquery( dateString )</h3>
+  <h3>dquery( date )</h3>
+  <h3>dquery()</h3>
+  <p>Constructs a dquery object.</p>
+  <table>
+    <tr>
+    <td valign="top">
+      <code>timestamp</code>
+    </td>
+    <td valign="top">
+      A millisecond timestamp.
+    </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <code>dateString</code>
+      </td>
+      <td valign="top">
+        A string representation of a date.<br />
+        Accepted formats are:<br />
+        <code>"ddd, dd mmm yy} {HH}:{MM}:{ss} {tz}"</code><br />
+        <code>mm/dd/yy</code><br />
+        <code>mm/dd/yy HH:MM</code><br />
+        <code>mm/dd/yy HH:MM:ss</code><br />
+        <code>yy</code><br />
+        <code>yy-mm</code><br />
+        <code>yy-mm-dd</code><br />
+        <code>yymmdd</code><br />
+        <code>yy-mm-dd HH:MM</code><br />
+        <code>yy-mm-dd HH:MM:ss</code><br />
+        <code>yy-mm-ddTHH:MM:sstz</code><br />
+        <code>yy-mm-ddTHH:MM:ssZ</code><br /><br />
+
+        See <a href="#format">format</a> for more information.
+
+      </td>
+    </tr>
+  </table>
 
   <a name="dquery.collect"></a>
   <h3>dquery.collect( options )</h3>
@@ -362,26 +432,26 @@ if (date.isYesterday()) {
   </p>
   <table>
     <tr>
-    <td>
+    <td valign="top">
       <code>start</code>
     </td>
-    <td>
+    <td valign="top">
       Start date. Can be of type <code>Date</code>, <code>dquery</code>, a valid date string, or a timestamp.
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>stop</code>
     </td>
-    <td>
+    <td valign="top">
       Stop date. Can be of type <code>Date</code>, <code>dquery</code>, a valid date string, or a timestamp.
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>metric</code>
     </td>
-    <td>
+    <td valign="top">
       What unit to increment. Can be <code>"milliseconds"</code>, 
       <code>"seconds"</code>, <code>"minutes"</code>, <code>"hours"</code>,
       <code>"days"</code>, <code>"weeks"</code>, <code>"months"</code>,
@@ -389,24 +459,26 @@ if (date.isYesterday()) {
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>step</code>
     </td>
-    <td>
+    <td valign="top">
       How much to increment at each step. Default is <code>1</code>.
     </td>
     </tr>
     <tr>
-    <td>
+    <td valign="top">
       <code>filter</code>
     </td>
-    <td>
+    <td valign="top">
       <strong>function( date )</strong><br />
       <code>callback</code> will be called if function returns true. <code>date</code> is the current iterated date.
     </td>
     </tr>
   </table>
-  
+ 
+  <h2>i8n:</h2>
+
   <a name="dquery.i8n.ampm"></a>
   <h3>dquery.i8n.ampm</h3>
   <p><strong>Array</strong> of language representation of am/pm. Default is <code>["am", "pm"]</code>.</p>
@@ -422,6 +494,8 @@ if (date.isYesterday()) {
   <a name="dquery.i8n.months"></a>
   <h3>dquery.i8n.months</h3>
   <p><strong>Array</strong> of language representations of months. Default is <code>["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "Mars", "April", "May", "June", "July", "August", "September", "October", "November", "December"]</code>.</p>
+
+  <h2>dquery.DateList object</h2>
 
   <a name="dquery.DateList"></a>
   <h3>dquery.DateList</h3>
