@@ -468,11 +468,10 @@ function constructParsable(str) {
     return function( str ) {
         var m;
         if( m = regex.exec(str) ) {
-            var o = {};
+            var o = {}, fmt = "", f;
             dquery.each(mapIndex, function(s, idx) {
                 o[ s ] = m[ idx ];
             });
-            var fmt = "";
             if( o.mm || o.mmm )
                 fmt += o.mm || (dquery.i8n.months.indexOf( o.mmm ) + 1) % 12;
             else
@@ -484,7 +483,7 @@ function constructParsable(str) {
                 + ":" + (o.ss || "00");
             if( o.tz )
                 fmt += " " + o.tz.replace(":", "");
-            var f = dquery( new Date(fmt) );
+            f = dquery( new Date(fmt) );
             return f;
         }
     }
