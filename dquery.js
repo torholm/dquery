@@ -377,7 +377,6 @@ dquery.iterate = function( options, callback ) {
         idx = 0;
     while( start <= stop ) {
         if( !filter || filter(start, idx) ) {
-            console.log( String(start) );
             callback( start.clone(), idx );
         }
         idx++;
