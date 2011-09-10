@@ -6,11 +6,13 @@ var capitalize = function(str) {
     },
 
     prefix = function( prefix, len, str ) {
-        if( !str || !prefix )
+        if( !str || !prefix ) {
             return str;
+        }
         str = String( str );
-        while( str.length < len )
+        while( str.length < len ) {
             str = prefix + str;
+        }
         return str;
     },
      
@@ -23,13 +25,17 @@ var capitalize = function(str) {
         } else {
             date = new Date();
         }
-        if( !date || /Invalid/.test(date + "") )
+        if( !date || /Invalid/.test(date + "") ) {
             throw new Error("Invalid date");
+        }
 
         return dquery.extend(date, dquery.methods);
     },
 
     dayIndex = function(day) {
+        if (typeof day == "number") {
+            return Math.abs(day % 7);
+        }
         return $d.index( capitalize(day), $d.i8n.weekdays );
     },
 
@@ -104,25 +110,27 @@ dquery.methods = {
                     return undefined;
             }
         } else {
-            if( type == "date" )
-                this.setDate( value );
-            else if( type == "year" )
-                this.setFullYear( value );
-            else if( type == "month" ) {
+            switch( type ) {
+            case "date":
+                return this.setDate( value ) && this;
+            case "year":
+                return this.setFullYear( value ) && this;
+            case "month":
                 var date = this.getDate();
                 this.setDate( 1 );
                 this.setMonth( value );
                 this.setDate(Math.min(this.daysInMonth(), date));
-            } else if( type == "seconds" )
-                this.setSeconds( value );
-            else if( type == "minutes" )
-                this.setMinutes( value );
-            else if( type == "hours" )
-                this.setHours( value );
-            else if( type == "ms" )
-                this.setMilliseconds( value );
-            else
-                return undefined;
+                return this;
+            case "seconds":
+                return this.setSeconds( value ) && this;
+            case "minutes":
+                return this.setMinutes( value ) && this;
+            case "hours":
+                return this.setHours( value ) && this;
+            case "ms":
+                return this.setMilliseconds( value ) && this;
+            }
+            return undefined;
         }
         return this;
     },
@@ -319,46 +327,16 @@ dquery.formatTable = {
 dquery.i8n = {};
 dquery.i8n["ampm"] = [ "am", "pm" ];
 dquery.i8n["weekdays"] = [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+    "Friday", "Saturday"
 ];
 dquery.i8n.weekstart = "monday";
 dquery.i8n["months"] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-    "January",
-    "February",
-    "Mars",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+    "Sep", "Oct", "Nov", "Dec",
+    "January", "February", "Mars", "April", "May", "June",
+    "July", "August", "September", "October", "November",
     "December"
 ];
 
@@ -399,6 +377,7 @@ dquery.iterate = function( options, callback ) {
         idx = 0;
     while( start <= stop ) {
         if( !filter || filter(start, idx) ) {
+            console.log( String(start) );
             callback( start.clone(), idx );
         }
         idx++;
