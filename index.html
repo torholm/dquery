@@ -11,7 +11,7 @@
       color: #333;
     }
     a { color: #05a; }
-    a:hover { background: #05a; color: #fff; }
+    a:hover { background: #05a; color: #fff; text-decoration: none; }
     .method-list a {
       display: inline-block;
       padding: 0 7px;
@@ -58,9 +58,38 @@
       padding: 5px;
       border: 1px solid #ddd;
     }
+
+    #menu ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    #menu ul li {
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+    }
+    #menu ul li a {
+      display: block;
+      padding: 10px;
+    }
+    #menu {
+      background: #eee;
+      margin: 20px 0;
+      padding: 1px 0;
+      border-top: 3px double #000;
+      border-bottom: 3px double #000;
+    }
     </style>
   </head>
 <body>
+  <nav id="menu">
+    <ul>
+      <li><a href="https://github.com/torholm/dquery">Repository</a></li>
+      <li><a href="https://torholm.github.com/dquery/">Documentation</a></li>
+    </ul>
+  </nav>
   <h1>dquery documentation</h1>
   <p class="method-list">
     <strong>dquery object functions:</strong><br />
