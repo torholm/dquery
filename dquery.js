@@ -79,11 +79,7 @@ dquery.methods = {
     },
 
     addMonths: function(value) {
-        var date = this.getDate();
-        this.setDate(1);
-        this.setMonth(this.getMonth() + value);
-        this.setDate(Math.min(this.daysInMonth(), date));
-        return this;
+        return this.set("month", this.getMonth() + value);
     },
 
     addYears: function(value) {
