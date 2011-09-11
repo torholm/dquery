@@ -179,6 +179,12 @@ dquery.methods = {
         return this.sameDate( dquery( cmp || new Date ).addDays(1) );
     },
 
+    isLeapYear: function() {
+        var year = this.getFullYear();
+        return (year % 4 == 0 && year % 100 == 0 && year % 400 == 0) 
+                    || year % 4 == 0;
+    },
+
     /**
      * Uses ISO 8601.
      * http://en.wikipedia.org/wiki/ISO_8601#Week_dates

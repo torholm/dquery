@@ -295,6 +295,16 @@ test("should determine yesterday, tomorrow, same date", function() {
     strictEqual( true, dquery("1/1/11").sameDate( dquery("1/1/11") ) );
 });
 
+test("should determine leap years", function() {
+    strictEqual(false, dquery("1/1/1999").isLeapYear());
+    strictEqual(true,  dquery("1/1/2000").isLeapYear());
+    strictEqual(false, dquery("1/1/2003").isLeapYear());
+    strictEqual(true,  dquery("1/1/2004").isLeapYear());
+    strictEqual(false,  dquery("1/1/2011").isLeapYear());
+    strictEqual(true,  dquery("1/1/2012").isLeapYear());
+    strictEqual(true,  dquery("1/1/2104").isLeapYear());
+});
+
 
 module("week");
 test("should determine correct week", function() {
