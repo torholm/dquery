@@ -90,6 +90,11 @@
       <li><a href="https://torholm.github.com/dquery/">Documentation</a></li>
     </ul>
   </nav>
+
+  <p>
+    <strong>dquery</strong> is a useful tool for handling dates and times. It works by extending instances of <code>Date</code> with additional functionality. Unfortunately, you can't just simply copy <code>Date.prototype</code>, like jQuery does with <code>Array.prototype</code>. So, we lose a bit of performance when we call <code>dquery()</code>.  The method simply creates a new <code>Date</code> object, and then sticks a bunch of methods onto it. The end result is a <code>Date</code> object that you can use just like an ordinary <code>Date</code> instance, but with more functionality.
+  </p>
+
   <h1>dquery documentation</h1>
   <p class="method-list">
     <strong>dquery object functions:</strong><br />
