@@ -110,6 +110,7 @@
     <a href="#firstWeek">firstWeek</a>
     <a href="#format">format</a>
     <a href="#getWeek">getWeek</a>
+    <a href="#isLeapYear">isLeapYear</a>
     <a href="#isTomorrow">isTomorrow</a>
     <a href="#isYesterday">isYesterday</a>
     <a href="#lastDayOfMonth">lastDayOfMonth</a>
@@ -275,13 +276,19 @@ days.each(function(date) {
 dquery().format("d mmm yyyy, hh:MMa");</pre>
 
   <a name="getWeek"></a>
-  <h3>getWeek</h3>
+  <h3>getWeek()</h3>
   <p>Gets the current week number. Depends on <a href="#dquery.i8n.weekstart">weekstart</a> configuration.</p>
   <h4>Example</h4>
   <pre class="example">var currentWeek = dquery().getWeek();</pre>
 
+  <a name="isLeapYear"></a>
+  <h3>isLeapYear()</a>
+  <p>Returns whether year is a leap year.</p>
+  <h4>Example</h4>
+  <pre class="example">var isLeapYear = dquery().isLeapYear();</pre>
+
   <a name="isTomorrow"></a>
-  <h3>isTomorrow</h3>
+  <h3>isTomorrow()</h3>
   <p>Returns whether day is tomorrow.</p>
   <h4>Example</h4>
   <pre class="example">var date = dquery("some date"); 
@@ -290,7 +297,7 @@ if (date.isTomorrow()) {
 }</pre>
 
   <a name="isYesterday"></a>
-  <h3>isYesterday</h3>
+  <h3>isYesterday()</h3>
   <p>Returns whether day is yesterday.</p>
   <h4>Example</h4>
   <pre class="example">var date = dquery("some date");
