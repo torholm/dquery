@@ -4,14 +4,7 @@ See **[documentation](http://torholm.github.com/dquery/)**.
 
 ## Introduction
 
-**dquery** is supposed to be a useful tool for handling dates and times.
-
-The basic requirement is to have an extended javascript `Date` object.
-Unfortunately, you can't just simply copy `Date.prototype`, like jQuery does with
-`Array.prototype`. So, we lose a bit of performance when we call `dquery()`.
-The method simply creates a new `Date` object, and then sticks a bunch of methods
-onto it. The end result is a `Date` object that you can use just like an ordinary
-`Date` instance, but with more functionality.
+**dquery** is a useful tool for handling dates and times. It works by extending instances of Date with additional functionality. Unfortunately, you can't just simply copy `Date.prototype`, like jQuery does with `Array.prototype`. So, we lose a bit of performance when we call `dquery()`.  The method simply creates a new `Date` object, and then sticks a bunch of methods onto it. The end result is a `Date` object that you can use just like an ordinary `Date` instance, but with more functionality.
 
 ### Features
 
