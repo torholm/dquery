@@ -6,7 +6,7 @@ var capitalize = function(str) {
     },
 
     prefix = function( prefix, len, str ) {
-        if( !str || !prefix ) {
+        if (typeof str == 'undefined' || typeof prefix == 'undefined') {
             return str;
         }
         str = String( str );
