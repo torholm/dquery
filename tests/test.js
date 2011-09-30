@@ -214,6 +214,7 @@ test("should format date", function() {
     equals("10", dquery("5/10/2011").format("dd"), "long numeric date");
     equals("Sun", dquery("5/22/2011").format("ddd"), "short textual date");
     equals("Sunday", dquery("5/22/2011").format("dddd"), "long textual date");
+    equals("00", dquery("5/10/2011 00:00").format("HH"), "padded zero minutes");
 });
 
 test("should format month", function() {
