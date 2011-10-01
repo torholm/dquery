@@ -5,6 +5,12 @@ test("should throw error when instantiating with nonsense", function() {
     })
 });
 
+test("should throw error when instantiating with Invalid date", function() {
+    raises(function() {
+        dquery("5/0/2011");
+    });
+});
+
 test("should instantiate with default date", function() {
     ok(/(\w+){3} (\w+){3}/i.test("" + dquery()));
 });
@@ -19,6 +25,14 @@ test("should parse date from 1 argument which is int timestamp", function() {
 
 test("should clone", function() {
     equals(dquery(1305496800000).getTime(), dquery(1305496800000).clone().getTime());
+});
+
+test("should sprintf", function() {
+    equals("foo 5 6", dquery.sprintf("{foo} {bar} {baz}", {
+        foo: "foo", 
+        bar: 5, 
+        baz: 6
+    }));
 });
 
 
@@ -116,7 +130,8 @@ test("should return undefined when setting nonsense", function() {
 });
 
 test("should set year to 2030", function() {
-    equals("Tue May 21 2030", (dquery("5/21/2011").set({ year: 2030 }) + "").substring(0, 15));
+    equals("Tue May 21 2030", 
+        (dquery("5/21/2011").set({ year: 2030 }) + "").substring(0, 15));
 });
 
 test("should set time to 12:34:56", function() {
@@ -134,7 +149,8 @@ test("should set millisec to 123", function() {
 
 module("functional");
 test("should each every date in month", function() {
-    var expected = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+    var expected = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,
+                    23,24,25,26,27,28,29,30,31],
         actual = [];
     dquery.iterate({
         metric: "days", 
@@ -267,6 +283,7 @@ test("should format US with year last", function() {
 
 test("should format time", function() {
     equals("05:40:35", dquery("1/1/11 05:40:35").format("HH:MM:ss"));
+    equals("00:00:00", dquery("1/1/11 00:00:00").format("HH:MM:ss"));
 });
 
 test("should format am/pm", function() {
@@ -278,6 +295,10 @@ test("should format am/pm", function() {
 
 test("should format time short", function() {
     equals("1:2:3", dquery("1/1/11 01:02:03").format("H:M:s"));
+});
+
+test("should ignore non-format text", function() {
+    equals("1:2:3 dddddd", dquery("1/1/11 01:02:03").format("H:M:s dddddd"));
 });
 
 

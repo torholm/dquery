@@ -1,45 +1,48 @@
 ;(function(exports) {
-var capitalize = function(str) {
-        return str.toLowerCase().replace(/^(\w)/, function(_, f) {
-            return f.toUpperCase()
-        })
-    },
+function capitalize(str) {
+    return str.toLowerCase().replace(/^(\w)/, function(_, f) {
+        return f.toUpperCase()
+    });
+}
 
-    prefix = function( prefix, len, str ) {
-        if (typeof str == 'undefined' || typeof prefix == 'undefined') {
-            return str;
-        }
-        str = String( str );
-        while( str.length < len ) {
-            str = prefix + str;
-        }
+function prefix(prefix, len, str) {
+    if (typeof str == 'undefined' || typeof prefix == 'undefined') {
         return str;
-    },
-     
-    dquery = function( fmt ) {
-        var date;
-        if( fmt instanceof Date || typeof fmt == "number" ) {
-            date = new Date( fmt );
-        } else if( typeof fmt == "string" ) {
-            date = dquery.parse( fmt );
-        } else {
-            date = new Date();
-        }
-        if( !date || /Invalid/.test(date + "") ) {
-            throw new Error("Invalid date");
-        }
+    }
+    str = String(str);
+    while (str.length < len) {
+        str = prefix + str;
+    }
+    return str;
+}
 
-        return dquery.extend(date, dquery.methods);
-    },
+/* Constructs dquery object */
+function dquery(fmt) {
+    var date;
 
-    dayIndex = function(day) {
-        if (typeof day == "number") {
-            return Math.abs(day % 7);
-        }
-        return $d.index( capitalize(day), $d.i8n.weekdays );
-    },
+    if (fmt instanceof Date || typeof fmt == "number") {
+        date = new Date( fmt );
+    } else if (typeof fmt == "string") {
+        date = dquery.parse( fmt );
+    } else {
+        date = new Date();
+    }
 
-    $d = dquery;
+    if (!date || /Invalid/.test(String(date))) {
+        throw new Error("Invalid date " + date);
+    }
+
+    return dquery.extend(date, dquery.methods);
+}
+
+function dayIndex(day) {
+    if (typeof day == "number") {
+        return Math.abs(day % 7);
+    }
+    return $d.index(capitalize(day), $d.i8n.weekdays);
+}
+
+var $d = dquery;
 
 dquery.methods = {
     daysInMonth: function() {
@@ -99,32 +102,33 @@ dquery.methods = {
         return dquery(this);
     },
 
-    set: function( type, value ) {
-        if( type && value === undefined ) {
-            for( var prop in type ) {
-                if( this.set( prop, type[ prop ] ) === undefined )
+    set: function(type, value) {
+        if (type && value === undefined) {
+            for (var prop in type) {
+                if (this.set(prop, type[prop]) === undefined) {
                     return undefined;
+                }
             }
         } else {
-            switch( type ) {
+            switch(type) {
             case "date":
-                return this.setDate( value ) && this;
+                return this.setDate(value) && this;
             case "year":
-                return this.setFullYear( value ) && this;
+                return this.setFullYear(value) && this;
             case "month":
                 var date = this.getDate();
-                this.setDate( 1 );
-                this.setMonth( value );
+                this.setDate(1);
+                this.setMonth(value);
                 this.setDate(Math.min(this.daysInMonth(), date));
                 return this;
             case "seconds":
-                return this.setSeconds( value ) && this;
+                return this.setSeconds(value) && this;
             case "minutes":
-                return this.setMinutes( value ) && this;
+                return this.setMinutes(value) && this;
             case "hours":
-                return this.setHours( value ) && this;
+                return this.setHours(value) && this;
             case "ms":
-                return this.setMilliseconds( value ) && this;
+                return this.setMilliseconds(value) && this;
             }
             return undefined;
         }
@@ -150,35 +154,35 @@ dquery.methods = {
         return this.set("date", 1);
     },
 
-    format: function( fmt ) {
+    format: function(format) {
         var self = this;
-        return fmt.replace(
-            /((d+){1,4}|(m+){1,4}|yy(?:yy)?|HH?|ss?|MM?|hh?|a)/g,
-        function( _, k ) {
-            if( dquery.formatTable[ k ] )
-                return dquery.formatTable[ k ].apply( self );
-            return "";
+        var specifiers = /((d+){1,4}|(m+){1,4}|yy(?:yy)?|HH?|ss?|MM?|hh?|a)/g;
+        return format.replace(specifiers, function(_, specifier) {
+            if (dquery.formatSpecifiers[specifier]) {
+                return dquery.formatSpecifiers[specifier].apply(self);
+            }
+            return specifier;
         });
     },
 
-    sameDate: function( cmp ) {
+    sameDate: function(cmp) {
         return this.getDate() == cmp.getDate() 
             && this.getMonth() == cmp.getMonth()
             && this.getFullYear() == cmp.getFullYear();
     },
 
-    isYesterday: function( cmp ) {
-        return this.sameDate( dquery( cmp || new Date ).addDays(-1) );
+    isYesterday: function(cmp) {
+        return this.sameDate(dquery(cmp || new Date).addDays(-1));
     },
 
-    isTomorrow: function( cmp ) {
-        return this.sameDate( dquery( cmp || new Date ).addDays(1) );
+    isTomorrow: function(cmp) {
+        return this.sameDate(dquery(cmp || new Date).addDays(1));
     },
 
     isLeapYear: function() {
         var year = this.getFullYear();
         return (year % 4 == 0 && year % 100 == 0 && year % 400 == 0) 
-                    || year % 4 == 0;
+                || year % 4 == 0;
     },
 
     /**
@@ -190,8 +194,8 @@ dquery.methods = {
         var oneWeekInMillisecs = 7 * 24 * 60 * 60 * 1000;
         var ws = dquery.i8n.weekstart;
         var weekEndIdx = (dayIndex(ws) - 1) % 7;
+        var weekEnd = dquery.i8n.weekdays[weekEndIdx];
         var firstWeekContains = (weekEndIdx == 0) ? 4 : 1;
-        var weekEnd = dquery.i8n.weekdays[ weekEndIdx ];
         var n = this.clone().next(weekEnd, { exceptSame: true });
 
         /* Get first day of first week of year */
@@ -219,21 +223,21 @@ dquery.methods = {
     },
 
     next: function(day, options) {
-        var idx = dayIndex( day ) % 7;
-        if (options && options.exceptSame && idx == this.getDay()) {
+        var index = dayIndex(day) % 7;
+        if (options && options.exceptSame && index == this.getDay()) {
             return this;
         } else {
-            var step = 7 - (7 + this.getDay() - idx) % 7;
+            var step = 7 - (7 + this.getDay() - index) % 7;
             return this.addDays(step || 7);
         }
     },
 
     prev: function(day, options) {
-        var idx = dayIndex( day ) % 7;
-        if (options && options.exceptSame && idx == this.getDay()) {
+        var index = dayIndex( day ) % 7;
+        if (options && options.exceptSame && index == this.getDay()) {
             return this;
         } else {
-            var step = (this.getDay() + 7 - idx) % 7;
+            var step = (this.getDay() + 7 - index) % 7;
             return this.addDays(-step || -7);
         }
     },
@@ -262,7 +266,7 @@ dquery.methods = {
     }
 };
 
-dquery.formatTable = {
+dquery.formatSpecifiers = {
     "HH": function() {
         return prefix( "0", 2, this.getHours());
     },
@@ -270,71 +274,73 @@ dquery.formatTable = {
         return String( this.getHours() );
     },
     "h": function() {
-        if( this.getHours() % 12 == 0 )
+        if (this.getHours() % 12 == 0) {
             return "12";
+        }
         return this.getHours() % 12;
     },
     "hh": function() {
-        if( this.getHours() % 12 == 0 )
+        if (this.getHours() % 12 == 0) {
             return "12";
-        return prefix( "0", 2, this.getHours() % 12 );
+        }
+        return prefix("0", 2, this.getHours() % 12);
     },
     "M": function() {
-        return String( this.getMinutes() );
+        return String(this.getMinutes());
     },
     "MM": function() {
-        return prefix( "0", 2, this.getMinutes() );
+        return prefix("0", 2, this.getMinutes());
     },
     "s": function() {
-        return String( this.getSeconds() );
+        return String(this.getSeconds());
     },
     "ss": function() {
-        return prefix( "0", 2, this.getSeconds() );
+        return prefix("0", 2, this.getSeconds());
     },
     "yy": function() {
-        return String( this.getFullYear()).substring( 2, 4 );
+        return String(this.getFullYear()).substring(2, 4);
     },
     "yyyy": function() {
-        return String( this.getFullYear() );
+        return String(this.getFullYear());
     },
     "m": function() {
-        return String( this.getMonth() + 1 );
+        return String(this.getMonth() + 1);
     },
     "mm": function() {
-        return prefix( "0", 2, this.getMonth() + 1 );
+        return prefix("0", 2, this.getMonth() + 1);
     },
     "mmm": function() {
-        return dquery.i8n.months[ this.getMonth() ];
+        return dquery.i8n.months[this.getMonth()];
     },
     "mmmm": function() {
-        return dquery.i8n.months[ this.getMonth() + 12 ];
+        return dquery.i8n.months[this.getMonth() + 12];
     },
     "dddd": function() {
-        return dquery.i8n.weekdays[ this.getDay() + 7 ];
+        return dquery.i8n.weekdays[this.getDay() + 7];
     },
     "ddd": function() {
-        return dquery.i8n.weekdays[ this.getDay() ];
+        return dquery.i8n.weekdays[this.getDay()];
     },
     "dd": function() {
-        return prefix( "0", 2, this.getDate() );
+        return prefix("0", 2, this.getDate());
     },
     "d": function() {
-        return String( this.getDate() );
+        return String(this.getDate());
     },
     "a": function() {
-        return dquery.i8n.ampm[ Math.floor( this.getHours() / 12 ) ];
+        return dquery.i8n.ampm[Math.floor(this.getHours() / 12)];
     }
 }
 
 dquery.i8n = {};
-dquery.i8n["ampm"] = [ "am", "pm" ];
-dquery.i8n["weekdays"] = [
+dquery.i8n.ampm = ["am", "pm"];
+dquery.i8n.weekdays = [
     "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
     "Friday", "Saturday"
 ];
 dquery.i8n.weekstart = "monday";
-dquery.i8n["months"] = [
+dquery.i8n.months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
     "Sep", "Oct", "Nov", "Dec",
     "January", "February", "Mars", "April", "May", "June",
@@ -342,175 +348,194 @@ dquery.i8n["months"] = [
     "December"
 ];
 
-dquery.each = function( list, callback) {
-    if( [].forEach ) {
-        list.forEach( callback );
+/* Utils */
+(function() {
+    dquery.each = function(list, callback) {
+        if ([].forEach) {
+            list.forEach(callback);
+        } else {
+            for (var i = 0, l = list.length; i < l; i++) {
+                if (callback(list[i], i) === false) {
+                    break;
+                }
+            }
+        }
+    }
+
+    dquery.map = function(list, callback) {
+        var result = [], index = 0;
+        dquery.each(list, function(val) {
+            result[result.length] = callback(val, index++);
+        });
+        return result;
+    }
+
+    dquery.extend = function(target, source) {
+        for (var prop in source) {
+            if (source.hasOwnProperty(prop)) {
+                target[prop] = source[prop];
+            }
+        }
+        return target;
+    }
+
+    dquery.iterate = function(options, callback) {
+        var start = dquery(options.start);
+        var stop  = dquery(options.stop);
+        var metricFn = "add" + capitalize(options.metric || "days");
+        var step = options.step || 1;
+        var filter = options.filter;
+        var index = 0;
+        while (start <= stop) {
+            if (!filter || filter(start, index)) {
+                callback(start.clone(), index);
+            }
+            index++;
+            start[metricFn](step);
+        }
+    }
+
+    dquery.collect = function( options ) {
+        var mapped = [];
+        dquery.iterate( options, function(val) { 
+            mapped[mapped.length] = val; 
+        });
+        return mapped;
+    }
+
+    dquery.diff = function(_start, _end) {
+        var start = dquery(_start),
+            end = dquery(_end);
+        var seconds = ~~((+end - +start) / 1000);
+        var minutes = ~~(seconds / 60);
+        var hours = ~~(minutes / 60);
+        var days = ~~(hours / 24);
+        var months = ~~(days / 30); /* approx months. */
+        var years = ~~(days / 365);
+        return {
+            seconds: seconds,
+            minutes: minutes,
+            hours: hours,
+            days: days,
+            months: months,
+            years: years
+        }
+    }
+
+    if ([].indexOf) {
+        dquery.index = function(elem, list) {
+            return list.indexOf(elem);
+        }
     } else {
-        for( var i = 0, l = list.length; i < l; i++ ) {
-            if( callback( list[i], i ) === false )
-                break;
+        dquery.index = function(elem, list) {
+            for (var i = 0, l = list.length; i < l; i++) {
+                if (list[i] === elem) {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
-}
 
-dquery.map = function( list, callback ) {
-    var a = [], i = 0;
-    dquery.each( list, function(val) {
-        a[a.length] = callback( val, i++ );
-    });
-    return a;
-}
-
-dquery.extend = function( target, source ) {
-    for( var prop in source ) {
-        if( source.hasOwnProperty( prop ) ) {
-            target[prop] = source[prop];
-        }
+    /* Very partial implementation of the original sprintf */
+    dquery.sprintf = function(format, args) {
+        return format.replace(/\{(\w+)\}/g, function(_, specifier) {
+            return String(args[specifier]);
+        });
     }
-    return target;
-}
-
-dquery.iterate = function( options, callback ) {
-    var start = dquery( options.start ),
-        stop = dquery( options.stop ),
-        metricFn = "add" + capitalize(options.metric || "days"),
-        step = options.step || 1,
-        filter = options.filter,
-        idx = 0;
-    while( start <= stop ) {
-        if( !filter || filter(start, idx) ) {
-            callback( start.clone(), idx );
-        }
-        idx++;
-        start[ metricFn ](step);
-    }
-}
-
-dquery.collect = function( options ) {
-    var ret = [];
-    dquery.iterate( options, function(val) { 
-        ret[ret.length] = val; 
-    });
-    return ret;
-}
-
-dquery.diff = function( _start, _end ) {
-    var start = dquery( _start ),
-        end = dquery( _end );
-    var seconds = ~~((+end - +start) / 1000);
-    var minutes = ~~(seconds / 60);
-    var hours = ~~(minutes / 60);
-    var days = ~~(hours / 24);
-    var months = ~~(days / 30); /* approx months. */
-    var years = ~~(days / 365);
-    return {
-        seconds: seconds,
-        minutes: minutes,
-        hours: hours,
-        days: days,
-        months: months,
-        years: years
-    }
-}
-
-dquery.index = function( elem, list ) {
-    for (var i = 0, l = list.length; i < l; i++) {
-        if (list[i] === elem) {
-            return i;
-        }
-    }
-    return -1;
-}
+}());
 
 /* Date parsing */
-var parseFormats = [
-    "{ddd}, {dd} {mmm} {yy} {HH}:{MM}:{ss} {tz}",
-    "{mm}/{dd}/{yy}",
-    "{mm}/{dd}/{yy} {HH}:{MM}",
-    "{mm}/{dd}/{yy} {HH}:{MM}:{ss}",
-    "{yy}",
-    "{yy}-{mm}",
-    "{yy}-{mm}-{dd}",
-    "{yy}{mm}{dd}",
-    "{yy}-{mm}-{dd} {HH}:{MM}",
-    "{yy}-{mm}-{dd} {HH}:{MM}:{ss}",
-    //2003-12-31T10:14:55-08:00
-    "{yy}-{mm}-{dd}T{HH}:{MM}:{ss}{tz}",
-    //2003-12-31T10:14:55Z
-    "{yy}-{mm}-{dd}T{HH}:{MM}:{ss}Z"
-];
-
-function constructParsable(str) {
-    var mapIndex = [""];
-    var regexStr = str.replace( /\{(\w+)\}/g, function( _, ident ) {
-        if( ident == "ddd" ) {
-            mapIndex[mapIndex.length] = "ddd";
-            return "(" + dquery.i8n.weekdays.join("|") + ")";
-        } else if( ident == "dd" ) {
-            mapIndex[mapIndex.length] = "dd";
-            return "(\\d?\\d)";
-        } else if( ident == "mmm" ) {
-            mapIndex[mapIndex.length] = "mmm";
-            return "(" + dquery.i8n.months.join("|") + ")";
-        } else if( ident == "mm" ) {
-            mapIndex[mapIndex.length] = "mm";
-            return "(\\d?\\d)";
-        } else if( ident == "yy" ) {
-            mapIndex[mapIndex.length] = "yy";
-            return "(\\d\\d\\d\\d|\\d\\d)";
-        } else if( ident == "tz" ) {
-            mapIndex[mapIndex.length] = "tz";
-            return "((\\w+){2,4}|\\+\\d\\d:?\\d\\d)";
-        } else if( ident == "HH" || ident == "MM" || ident == "ss" ) {
-            mapIndex[mapIndex.length] = ident;
-            return "(\\d\\d)";
-        }
-    });
-    var regex = new RegExp("^" + regexStr + "$");
-    return function( str ) {
-        var m;
-        if( m = regex.exec(str) ) {
-            var o = {}, fmt = "", f;
-            dquery.each(mapIndex, function(s, idx) {
-                o[ s ] = m[ idx ];
-            });
-            if( o.mm || o.mmm )
-                fmt += o.mm || (dquery.i8n.months.indexOf( o.mmm ) + 1) % 12;
-            else
-                fmt += "1";
-            fmt += "/" + o.dd || "1";
-            fmt += "/" + (o.yy.length == 2 ? "20" + o.yy : o.yy);
-            fmt += " " + (o.HH || "00")
-                + ":" + (o.MM || "00")
-                + ":" + (o.ss || "00");
-            if( o.tz )
-                fmt += " " + o.tz.replace(":", "");
-            f = dquery( new Date(fmt) );
-            return f;
-        }
-    }
-}
-
-var parseTable = dquery.map( parseFormats, function(val) {
-    return constructParsable( val );
-});
-
-dquery.parse = function( str ) {
-    var ret;
-    dquery.each( parseTable, function( m ) {
-        var res = m( str );
-        if( res ) {
-            ret = res;
-            return false;
-        }
-    });
-    return ret;
-};
-
 (function() {
-    var dateList = dquery.DateList = function() {
+    var formats = [
+        "{ddd}, {dd} {mmm} {yy} {HH}:{MM}:{ss} {tz}",
+        "{mm}/{dd}/{yy}",
+        "{mm}/{dd}/{yy} {HH}:{MM}",
+        "{mm}/{dd}/{yy} {HH}:{MM}:{ss}",
+        "{yy}",
+        "{yy}-{mm}",
+        "{yy}-{mm}-{dd}",
+        "{yy}{mm}{dd}",
+        "{yy}-{mm}-{dd} {HH}:{MM}",
+        "{yy}-{mm}-{dd} {HH}:{MM}:{ss}",
+        "{yy}-{mm}-{dd}T{HH}:{MM}:{ss}{tz}",
+        "{yy}-{mm}-{dd}T{HH}:{MM}:{ss}Z"
+    ];
+
+    var specifiers = {
+        "ddd" : "(" + dquery.i8n.weekdays.join("|") + ")",
+        "dd"  : "(\\d?\\d)",
+        "mmm" : "(" + dquery.i8n.months.join("|") + ")",
+        "mm"  : "(\\d?\\d)" ,
+        "yy"  : "(\\d\\d\\d\\d|\\d\\d)",
+        "tz"  : "((\w+){2,4}|\\+\\d\\d:?\\d\\d)",
+        "HH"  : "(\\d\\d)",
+        "MM"  : "(\\d\\d)",
+        "ss"  : "(\\d\\d)"
     }
 
+    var defaultFormat = "{mm}/{dd}/{yy} {HH}:{MM}:{ss}{tz}";
+
+    var parseFunctions = dquery.map(formats, function(format) {
+        var idents = [""];
+        var regexStr = format.replace( /\{(\w+)\}/g, function(_, ident) {
+            idents[idents.length] = ident;
+            return specifiers[ident];
+        });
+
+        var regex = new RegExp("^" + regexStr + "$");
+
+        return function(str) {
+            var match;
+            var data = {
+                dd: "1",
+                mm: "1",
+                yy: "1970",
+                MM: "00",
+                HH: "00",
+                ss: "00",
+                tz: ""
+            };
+            var formatted;
+
+            if (!(match = regex.exec(str)))
+                return undefined;
+
+            for (var i = 1, l = match.length; i < l; i++) {
+                var ident = idents[i];
+                data[ident] = match[i];
+            }
+
+            if (data.monthname) {
+                data.month = $d.index(data.monthname, dquery.i8n.months) % 12;
+            }
+
+            if (data.year && data.year.length == 2) {
+                data.year = "20" + data.year;
+            }
+
+            if (data.timezone) {
+                data.timezone = data.timezone.replace(":", "");
+            }
+
+            formatted = dquery.sprintf(defaultFormat, data);
+            return dquery(new Date(formatted));
+        }
+    });
+
+    dquery.parse = function(str) {
+        var parsed;
+        for (var i = 0, l = parseFunctions.length; i < l; i++) {
+            if (parsed = parseFunctions[i](str)) {
+                return parsed;
+            }
+        }
+    };
+}());
+
+/* dquery.DateList */
+(function() {
+    var dateList = dquery.DateList = function() {}
     var proto = dateList.prototype = Array.prototype;
 
     proto.each = function(callback) {
