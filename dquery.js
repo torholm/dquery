@@ -21,9 +21,9 @@ function dquery(fmt) {
     var date;
 
     if (fmt instanceof Date || typeof fmt == "number") {
-        date = new Date( fmt );
+        date = new Date(fmt);
     } else if (typeof fmt == "string") {
-        date = dquery.parse( fmt );
+        date = dquery.parse(fmt);
     } else {
         date = new Date();
     }
@@ -78,7 +78,7 @@ dquery.methods = {
     },
 
     addWeeks: function(value) {
-        return this.addDays( value * 7 );
+        return this.addDays(value * 7);
     },
 
     addMonths: function(value) {
@@ -233,7 +233,7 @@ dquery.methods = {
     },
 
     prev: function(day, options) {
-        var index = dayIndex( day ) % 7;
+        var index = dayIndex(day) % 7;
         if (options && options.exceptSame && index == this.getDay()) {
             return this;
         } else {
@@ -268,10 +268,10 @@ dquery.methods = {
 
 dquery.formatSpecifiers = {
     "HH": function() {
-        return prefix( "0", 2, this.getHours());
+        return prefix("0", 2, this.getHours());
     },
     "H": function() {
-        return String( this.getHours() );
+        return String(this.getHours());
     },
     "h": function() {
         if (this.getHours() % 12 == 0) {
@@ -395,9 +395,9 @@ dquery.i8n.months = [
         }
     }
 
-    dquery.collect = function( options ) {
+    dquery.collect = function(options) {
         var mapped = [];
-        dquery.iterate( options, function(val) { 
+        dquery.iterate(options, function(val) { 
             mapped[mapped.length] = val; 
         });
         return mapped;
@@ -478,7 +478,7 @@ dquery.i8n.months = [
 
     var parseFunctions = dquery.map(formats, function(format) {
         var idents = [""];
-        var regexStr = format.replace( /\{(\w+)\}/g, function(_, ident) {
+        var regexStr = format.replace(/\{(\w+)\}/g, function(_, ident) {
             idents[idents.length] = ident;
             return specifiers[ident];
         });
