@@ -109,6 +109,7 @@ dquery.methods = {
                     return undefined;
                 }
             }
+            return this;
         } else {
             switch(type) {
             case "date":
@@ -132,7 +133,6 @@ dquery.methods = {
             }
             return undefined;
         }
-        return this;
     },
 
     firstDayOfYear: function() {
