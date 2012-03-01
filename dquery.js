@@ -343,7 +343,7 @@ dquery.i8n.weekstart = "monday";
 dquery.i8n.months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
     "Sep", "Oct", "Nov", "Dec",
-    "January", "February", "Mars", "April", "May", "June",
+    "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November",
     "December"
 ];
